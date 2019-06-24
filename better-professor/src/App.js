@@ -1,26 +1,22 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import { StateProvider } from "react-conflux";
+import { loginReducer } from "./store/reducers";
+import { stateContext } from "./store/contexts";
+import "./App.css";
 
-function App() {
+import Login from "./components/Login";
+import Register from "./components/Register";
+
+const App = () => {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <StateProvider reducer={loginReducer} stateContext={stateContext}>
+      <div className="App">
+        <h1>Better Professor App</h1>
+        <Login />
+        <Register />
+      </div>
+    </StateProvider>
   );
-}
+};
 
 export default App;
