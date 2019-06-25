@@ -99,7 +99,7 @@ const Register = props => {
           onChange={e => setUsername(e.target.value)}
         />
         <TextField
-          type="text"
+          type="password"
           placeholder="Password"
           variant="outlined"
           value={password}
