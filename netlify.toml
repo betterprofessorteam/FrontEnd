@@ -2,3 +2,8 @@
     base = "better-professor/"
 
     publish = "better-professor/build/"
+
+[[redirects]]
+    from = "/*"
+    to = "/index.html"
+    status = 200
