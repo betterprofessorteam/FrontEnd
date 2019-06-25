@@ -1,20 +1,36 @@
 import React from "react";
+import { Route, Link } from "react-router-dom";
 import { StateProvider } from "react-conflux";
-import { loginReducer } from "./store/reducers";
-import { stateContext } from "./store/contexts";
+import { reducer } from "./store/index";
+import { stateContext } from "./store";
 import "./App.css";
 
 import Login from "./components/Login";
 import Register from "./components/Register";
+import Home from "./components/Home";
 
 const App = () => {
   return (
-    <StateProvider reducer={loginReducer} stateContext={stateContext}>
+    <StateProvider reducer={reducer} stateContext={stateContext}>
       <div className="App">
-        <h1>Better Professor App</h1>
-        <Login />
-        <Register />
+        <Route exact path="/" component={Home} />
+        <Link to="/login">Login</Link>
+        <Link to="/register">Register</Link>
       </div>
+
+      <Route
+        path="/login"
+        render={props => {
+          return <Login {...props} />;
+        }}
+      />
+
+      <Route
+        path="/register"
+        render={props => {
+          return <Register {...props} />;
+        }}
+      />
     </StateProvider>
   );
 };
