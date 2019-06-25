@@ -4,12 +4,18 @@ import {
   stateContext,
   REGISTER_START,
   REGISTER_SUCCESS,
-  REGISTER_FAIL
+  REGISTER_FAIL,
+  SET_USER_TYPE
 } from "../store";
 import axios from "axios";
 import Container from "@material-ui/core/Container";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
+import FormControl from "@material-ui/core/FormControl";
+import FormLabel from "@material-ui/core/FormLabel";
+import RadioGroup from "@material-ui/core/RadioGroup";
+import Radio from "@material-ui/core/Radio";
+import { FormControlLabel } from "@material-ui/core";
 
 const Register = props => {
   const [state, dispatch] = useStateValue(stateContext);
@@ -19,6 +25,7 @@ const Register = props => {
   const [email, setEmail] = useState("");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
+  const [userType, setUserType] = useState("");
 
   const register = body => {
     dispatch({ type: REGISTER_START });
@@ -32,10 +39,10 @@ const Register = props => {
         return true;
       })
       .catch(err => {
-        console.log(`${err.response.data.status} ${err.response.data.error}`);
+        console.log(err);
         dispatch({
           type: REGISTER_FAIL,
-          payload: `${err.response.data.status} ${err.response.data.error}`
+          payload: err
         });
       });
   };
@@ -45,12 +52,22 @@ const Register = props => {
       <form
         onSubmit={e => {
           e.preventDefault();
-          const body = {
-            username,
-            password,
-            mentorData: { firstName, lastName }
-          };
-          register(body);
+          dispatch({ type: SET_USER_TYPE, payload: userType });
+          if (userType === "mentor") {
+            const body = {
+              username,
+              password,
+              mentorData: { firstName, lastName }
+            };
+            register(body);
+          } else {
+            const body = {
+              username,
+              password,
+              studentData: { firstName, lastName }
+            };
+            register(body);
+          }
         }}
       >
         <TextField
@@ -88,6 +105,18 @@ const Register = props => {
           value={password}
           onChange={e => setPassword(e.target.value)}
         />
+        <RadioGroup
+          value={userType}
+          onChange={e => setUserType(e.target.value)}
+        >
+          <FormControlLabel value="mentor" control={<Radio />} label="Mentor" />
+          <FormControlLabel
+            value="student"
+            control={<Radio />}
+            label="Student"
+          />
+        </RadioGroup>
+
         <Button type="submit" variant="contained" color="primary">
           Submit
         </Button>

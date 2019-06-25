@@ -5,6 +5,7 @@ export const stateContext = createContext();
 export const initialState = {
   registering: false,
   loggingIn: false,
+  userType: "",
   error: ""
 };
 
@@ -16,7 +17,10 @@ export const LOGIN_START = "LOGIN_START";
 export const LOGIN_SUCCESS = "LOGIN_SUCCESS";
 export const LOGIN_FAIL = "LOGIN_FAIL";
 
+export const SET_USER_TYPE = "SET_USER_TYPE";
+
 export const reducer = (state = initialState, action) => {
+  console.log("REDUCER STATE", state);
   switch (action.type) {
     case REGISTER_START:
       return {
@@ -36,6 +40,12 @@ export const reducer = (state = initialState, action) => {
         error: action.payload,
         registering: false
       };
+    case SET_USER_TYPE:
+      return {
+        ...state,
+        error: "",
+        userType: action.payload
+      };
     case LOGIN_START:
       return {
         ...state,
@@ -54,33 +64,8 @@ export const reducer = (state = initialState, action) => {
         error: action.payload,
         loggingIn: false
       };
+
     default:
       return state;
   }
 };
-
-// export const loginReducer = (state = initialState, action) => {
-//   switch (action.type) {
-//     case LOGIN_START:
-//       return {
-//         ...state,
-//         error: "",
-//         loggingIn: true
-//       };
-//     case LOGIN_SUCCESS:
-//       return {
-//         ...state,
-//         error: "",
-//         loggingIn: false
-//       };
-//     case LOGIN_FAIL:
-//       return {
-//         ...state,
-//         error: action.payload,
-//         loggingIn: false
-//       };
-
-//     default:
-//       return state;
-//   }
-// };

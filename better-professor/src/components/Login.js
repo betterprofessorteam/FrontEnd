@@ -6,15 +6,14 @@ import Container from "@material-ui/core/Container";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 
-const Login = () => {
+const Login = props => {
   const [state, dispatch] = useStateValue(stateContext);
 
   const [password, setPassword] = useState("");
   const [username, setUsername] = useState("");
 
-  const login = () => {
+  const login = body => {
     dispatch({ type: LOGIN_START });
-
     axios
       .post(
         "https://better-professor.herokuapp.com/oauth/token",
@@ -34,10 +33,15 @@ const Login = () => {
       .then(res => {
         localStorage.setItem("token", res.data.access_token);
         dispatch({ type: LOGIN_SUCCESS });
+        props.history.push("/my-calendar");
         return true;
       })
       .catch(err => {
-        dispatch({ type: LOGIN_FAIL, payload: err.response.message });
+        console.log(err);
+        dispatch({
+          type: LOGIN_FAIL,
+          payload: err
+        });
       });
   };
 

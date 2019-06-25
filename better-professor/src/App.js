@@ -8,14 +8,14 @@ import "./App.css";
 import Login from "./components/Login";
 import Register from "./components/Register";
 import Home from "./components/Home";
+import MyCalendar from "./components/MyCalendar";
 
 const App = () => {
   return (
     <StateProvider reducer={reducer} stateContext={stateContext}>
       <div className="App">
         <Route exact path="/" component={Home} />
-        {/* <Link to="/login">Login</Link>
-          <Link to="/register">Register</Link> */}
+        <Link to="/my-calendar">My Calendar</Link>
       </div>
 
       <Route
@@ -29,6 +29,13 @@ const App = () => {
         path="/register"
         render={props => {
           return <Register {...props} />;
+        }}
+      />
+
+      <Route
+        path="/my-calendar"
+        render={props => {
+          return <MyCalendar {...props} />;
         }}
       />
     </StateProvider>
