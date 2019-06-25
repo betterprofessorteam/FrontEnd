@@ -14,8 +14,8 @@ const App = () => {
     <StateProvider reducer={reducer} stateContext={stateContext}>
       <div className="App">
         <Route exact path="/" component={Home} />
-        <Link to="/login">Login</Link>
-        <Link to="/register">Register</Link>
+        {/* <Link to="/login">Login</Link>
+          <Link to="/register">Register</Link> */}
       </div>
 
       <Route

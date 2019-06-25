@@ -2,6 +2,9 @@ import React, { useState } from "react";
 import { useStateValue } from "react-conflux";
 import { stateContext, LOGIN_START, LOGIN_SUCCESS, LOGIN_FAIL } from "../store";
 import axios from "axios";
+import Container from "@material-ui/core/Container";
+import TextField from "@material-ui/core/TextField";
+import Button from "@material-ui/core/Button";
 
 const Login = () => {
   const [state, dispatch] = useStateValue(stateContext);
@@ -39,28 +42,32 @@ const Login = () => {
   };
 
   return (
-    <>
+    <Container>
       <form
         onSubmit={e => {
           e.preventDefault();
           login();
         }}
       >
-        <input
+        <TextField
           type="text"
           placeholder="Username"
+          variant="outlined"
           value={username}
           onChange={e => setUsername(e.target.value)}
         />
-        <input
+        <TextField
           type="text"
           placeholder="Password"
+          variant="outlined"
           value={password}
           onChange={e => setPassword(e.target.value)}
         />
-        <button type="submit">Submit</button>
+        <Button type="submit" variant="contained" color="primary">
+          Submit
+        </Button>
       </form>
-    </>
+    </Container>
   );
 };
 
