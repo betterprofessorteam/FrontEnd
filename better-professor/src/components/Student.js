@@ -8,9 +8,9 @@ const Student = props => {
 
   return (
     <>
-      <TableRow key={props.student.firstName}>
-        <TableCell>{`${props.student.lastName}, ${
-          props.student.firstName
+      <TableRow key={props.student.studentData.firstName}>
+        <TableCell>{`${props.student.studentData.lastName}, ${
+          props.student.studentData.firstName
         }`}</TableCell>
         <TableCell>{props.student.email}</TableCell>
         <TableCell>{props.student.username}</TableCell>

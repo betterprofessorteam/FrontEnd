@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useImperativeHandle } from "react";
 import axios from "axios";
 import { useStateValue } from "react-conflux";
 import { stateContext, STUDENT_SEARCH, STUDENT_SEARCH_FAIL } from "../store";
@@ -19,26 +19,6 @@ const Students = () => {
 
   const [students, setStudents] = useState([]);
 
-  //   useEffect(() => {
-  //     axios
-  //       .get("https://better-professor.herokuapp.com/user/students", {
-  //         headers: {
-  //           Authorization: `Bearer ${localStorage.getItem("token")}`
-  //         }
-  //       })
-  //       .then(res => {
-  //         console.log("RES.DATA", res.data);
-  //         setStudents(res.data);
-  //       })
-  //       .catch(err => {
-  //         dispatch({
-  //           type: STUDENT_SEARCH_FAIL,
-  //           payload: `${err.response.status}
-  //           ${err.response.data.error_description}`
-  //         });
-  //       });
-  //   }, []);
-
   useEffect(() => {
     axios
       .get("https://better-professor.herokuapp.com/user/students", {
@@ -47,54 +27,53 @@ const Students = () => {
         }
       })
       .then(res => {
-        console.log(res.data);
-        dispatch({ type: STUDENT_SEARCH, payload: res.data });
+        console.log("RES.DATA", res.data[0].studentData);
+        setStudents(
+          res.data.sort((a, b) =>
+            a.studentData.lastName > b.studentData.lastName
+              ? 1
+              : a.studentData.lastName === b.studentData.lastName
+              ? 1
+              : -1
+          )
+        );
       })
       .catch(err => {
-        console.log(
-          `${err.response.status} ${err.response.data.error_description}`
-        );
         dispatch({
           type: STUDENT_SEARCH_FAIL,
-          payload: `${err.response.status} ${
-            err.response.data.error_description
-          }`
+          payload: `${err.response.status}
+            ${err.response.data.error_description}`
         });
       });
   }, []);
 
-  console.log("STUDENTS STATE", state);
-  console.table(state.students[0]);
-
-  const theStudents = [
-    {
-      firstName: "John",
-      lastName: "Smith",
-      email: "johnsmith@yahoo.com",
-      username: "jojoyoyo"
-    },
-    {
-      firstName: "Becca",
-      lastName: "Johnson",
-      email: "bjohnson@gmail.com",
-      username: "bjohnson"
-    },
-    {
-      firstName: "Amber",
-      lastName: "Gordon",
-      email: "wowokay@yahoo.com",
-      username: "agord1"
-    },
-    {
-      firstName: "Greg",
-      lastName: "Apple",
-      email: "the1andonly@hotmail.com",
-      username: "apple-time5000"
-    }
-  ];
+  //   useEffect(() => {
+  //     axios
+  //       .get("https://better-professor.herokuapp.com/user/students", {
+  //         headers: {
+  //           Authorization: `Bearer ${localStorage.getItem("token")}`
+  //         }
+  //       })
+  //       .then(res => {
+  //         console.log(res.data);
+  //         dispatch({ type: STUDENT_SEARCH, payload: res.data });
+  //       })
+  //       .catch(err => {
+  //         console.log(
+  //           `${err.response.status} ${err.response.data.error_description}`
+  //         );
+  //         dispatch({
+  //           type: STUDENT_SEARCH_FAIL,
+  //           payload: `${err.response.status} ${
+  //             err.response.data.error_description
+  //           }`
+  //         });
+  //       });
+  //   }, []);
 
   return (
     <Container>
+      <input placeholder="Search" />
       <Paper>
         <Table>
           <TableHead>
@@ -105,7 +84,7 @@ const Students = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {theStudents.map((student, index) => (
+            {students.map((student, index) => (
               <Student student={student} index={index} key={index} />
             ))}
           </TableBody>
