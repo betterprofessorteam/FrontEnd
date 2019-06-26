@@ -44,7 +44,7 @@ const Students = () => {
       });
   }, []);
 
-  console.log("STATE", state);
+  console.log("STUDENTS STATE", state);
   console.table(state.students);
 
   const theStudents = [

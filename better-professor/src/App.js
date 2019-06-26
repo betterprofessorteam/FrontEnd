@@ -17,7 +17,6 @@ const App = () => {
     <StateProvider reducer={reducer} stateContext={stateContext}>
       <div className="App">
         <Route exact path="/" component={Home} />
-        <Link to="/my-calendar">My Calendar</Link>
       </div>
 
       <Route
