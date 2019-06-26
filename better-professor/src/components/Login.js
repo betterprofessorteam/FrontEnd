@@ -1,10 +1,8 @@
 import React, { useState } from "react";
 import { useStateValue } from "react-conflux";
-import { stateContext, LOGIN_START, LOGIN_SUCCESS, LOGIN_FAIL } from "../store";
+import { stateContext, LOGIN_SUCCESS, LOGIN_FAIL } from "../store";
 import axios from "axios";
-import Container from "@material-ui/core/Container";
-import TextField from "@material-ui/core/TextField";
-import Button from "@material-ui/core/Button";
+import { Button, TextField, Container } from "@material-ui/core";
 
 const Login = props => {
   const [state, dispatch] = useStateValue(stateContext);
@@ -12,8 +10,7 @@ const Login = props => {
   const [password, setPassword] = useState("");
   const [username, setUsername] = useState("");
 
-  const login = body => {
-    dispatch({ type: LOGIN_START });
+  const login = () => {
     axios
       .post(
         "https://better-professor.herokuapp.com/oauth/token",
@@ -33,14 +30,18 @@ const Login = props => {
       .then(res => {
         localStorage.setItem("token", res.data.access_token);
         dispatch({ type: LOGIN_SUCCESS });
-        props.history.push("/my-calendar");
+        props.history.push("/my-bp");
         return true;
       })
       .catch(err => {
-        console.log(err);
+        console.log(
+          `${err.response.status} ${err.response.data.error_description}`
+        );
         dispatch({
           type: LOGIN_FAIL,
-          payload: err
+          payload: `${err.response.status} ${
+            err.response.data.error_description
+          }`
         });
       });
   };
