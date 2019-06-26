@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useImperativeHandle } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useStateValue } from "react-conflux";
 import { stateContext, STUDENT_SEARCH, STUDENT_SEARCH_FAIL } from "../store";
@@ -9,8 +9,11 @@ import {
   TableCell,
   TableHead,
   TableRow,
-  Paper
+  Paper,
+  TextField,
+  InputAdornment
 } from "@material-ui/core";
+import SearchIcon from "@material-ui/icons/Search";
 
 import Student from "./Student";
 
@@ -18,6 +21,7 @@ const Students = () => {
   const [state, dispatch] = useStateValue(stateContext);
 
   const [students, setStudents] = useState([]);
+  const [searchText, setSearchText] = useState("");
 
   useEffect(() => {
     axios
@@ -73,7 +77,26 @@ const Students = () => {
 
   return (
     <Container>
-      <input placeholder="Search" />
+      <TextField
+        placeholder="Search"
+        variant="outlined"
+        value={searchText}
+        onChange={e => setSearchText(e.target.value)}
+        // onChange={e => {
+        //   setStudents(
+        //     students.filter(student =>
+        //       student.studentData.lastName.includes(e.target.value)
+        //     )
+        //   );
+        // }}
+        InputProps={{
+          startAdornment: (
+            <InputAdornment position="start">
+              <SearchIcon />
+            </InputAdornment>
+          )
+        }}
+      />
       <Paper>
         <Table>
           <TableHead>
@@ -84,9 +107,19 @@ const Students = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {students.map((student, index) => (
-              <Student student={student} index={index} key={index} />
-            ))}
+            {searchText.length > 0
+              ? students
+                  .filter(student => {
+                    const lc = student.studentData.lastName.toLowerCase();
+                    const filter = searchText.toLowerCase();
+                    return lc.includes(filter);
+                  })
+                  .map((student, index) => (
+                    <Student student={student} index={index} key={index} />
+                  ))
+              : students.map((student, index) => (
+                  <Student student={student} index={index} key={index} />
+                ))}
           </TableBody>
         </Table>
       </Paper>
