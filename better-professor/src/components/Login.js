@@ -1,10 +1,8 @@
 import React, { useState } from "react";
 import { useStateValue } from "react-conflux";
-import { stateContext, LOGIN_START, LOGIN_SUCCESS, LOGIN_FAIL } from "../store";
+import { stateContext, LOGIN_SUCCESS, LOGIN_FAIL } from "../store";
 import axios from "axios";
-import Container from "@material-ui/core/Container";
-import TextField from "@material-ui/core/TextField";
-import Button from "@material-ui/core/Button";
+import { Button, TextField, Container } from "@material-ui/core";
 
 const Login = props => {
   const [state, dispatch] = useStateValue(stateContext);

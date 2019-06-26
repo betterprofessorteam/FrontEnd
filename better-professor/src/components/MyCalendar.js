@@ -13,4 +13,8 @@ const MyCalendar = () => {
   );
 };
 
+//Clickable days that expand and show a list?
+//Possibly scratch or find a new one
+//Need a list of upcoming events/trackers
+
 export default MyCalendar;

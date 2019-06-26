@@ -2,18 +2,19 @@ import React, { useState } from "react";
 import { useStateValue } from "react-conflux";
 import {
   stateContext,
-  REGISTER_START,
   REGISTER_SUCCESS,
   REGISTER_FAIL,
   SET_USER_TYPE
 } from "../store";
 import axios from "axios";
-import Container from "@material-ui/core/Container";
-import TextField from "@material-ui/core/TextField";
-import Button from "@material-ui/core/Button";
-import RadioGroup from "@material-ui/core/RadioGroup";
-import Radio from "@material-ui/core/Radio";
-import { FormControlLabel } from "@material-ui/core";
+import {
+  FormControlLabel,
+  Radio,
+  RadioGroup,
+  Button,
+  TextField,
+  Container
+} from "@material-ui/core";
 
 const Register = props => {
   const [state, dispatch] = useStateValue(stateContext);
@@ -32,7 +33,7 @@ const Register = props => {
         console.log(res.data);
         localStorage.setItem("username", res.data.username);
         dispatch({ type: REGISTER_SUCCESS });
-        props.history.push("/login");
+        props.history.push("/register-success");
         return true;
       })
       .catch(err => {
@@ -106,6 +107,7 @@ const Register = props => {
           value={password}
           onChange={e => setPassword(e.target.value)}
         />
+        <p style={{ fontSize: "1.1rem" }}>Please select an account type</p>
         <RadioGroup
           value={userType}
           onChange={e => setUserType(e.target.value)}
@@ -117,6 +119,11 @@ const Register = props => {
             label="Student"
           />
         </RadioGroup>
+        <p style={{ color: "#404142" }}>*All fields are required</p>
+        <p style={{ color: "#404142" }}>
+          *Username and Password must be 6 characters long and may only contain
+          letters and numbers
+        </p>
 
         <Button type="submit" variant="contained" color="primary">
           Submit

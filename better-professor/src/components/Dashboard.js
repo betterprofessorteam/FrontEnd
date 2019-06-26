@@ -1,16 +1,18 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import Container from "@material-ui/core/Container";
 import { withStyles } from "@material-ui/core/styles";
-import Button from "@material-ui/core/Button";
-import Menu from "@material-ui/core/Menu";
-import MenuItem from "@material-ui/core/MenuItem";
-import ListItemIcon from "@material-ui/core/ListItemIcon";
-import ListItemText from "@material-ui/core/ListItemText";
 import InboxIcon from "@material-ui/icons/MoveToInbox";
 import SearchIcon from "@material-ui/icons/Search";
 import SendIcon from "@material-ui/icons/Send";
 import CalendarIcon from "@material-ui/icons/CalendarToday";
+import {
+  Container,
+  Button,
+  Menu,
+  MenuItem,
+  ListItemIcon,
+  ListItemText
+} from "@material-ui/core";
 
 const StyledMenu = withStyles({
   paper: {
@@ -95,12 +97,17 @@ const Dashboard = () => {
             <SendIcon />
           </ListItemIcon>
           <Link to="/my-bp/send-message">
-            <ListItemText primary="New Message" />
+            <ListItemText primary="Send Message" />
           </Link>
         </StyledMenuItem>
       </StyledMenu>
     </Container>
   );
 };
+
+//Make a header that has app "logo" and hamburger icon for drawer
+//change menu to a drawer from the left side-include: add reminder
+//Notifications for New Messages, add requests(students only), trackers/reminders
+//Account/profile 'menu' w/ Edit Profile and Delete Account options
 
 export default Dashboard;
