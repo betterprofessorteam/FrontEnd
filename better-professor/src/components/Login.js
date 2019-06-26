@@ -12,8 +12,8 @@ const Login = props => {
   const [password, setPassword] = useState("");
   const [username, setUsername] = useState("");
 
-  const login = body => {
-    dispatch({ type: LOGIN_START });
+  const login = () => {
+    // dispatch({ type: LOGIN_START });
     axios
       .post(
         "https://better-professor.herokuapp.com/oauth/token",
@@ -33,14 +33,18 @@ const Login = props => {
       .then(res => {
         localStorage.setItem("token", res.data.access_token);
         dispatch({ type: LOGIN_SUCCESS });
-        props.history.push("/my-calendar");
+        props.history.push("/my-bp");
         return true;
       })
       .catch(err => {
-        console.log(err);
+        console.log(
+          `${err.response.status} ${err.response.data.error_description}`
+        );
         dispatch({
           type: LOGIN_FAIL,
-          payload: err
+          payload: `${err.response.status} ${
+            err.response.data.error_description
+          }`
         });
       });
   };

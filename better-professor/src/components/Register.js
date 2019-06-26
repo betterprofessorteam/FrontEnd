@@ -11,8 +11,6 @@ import axios from "axios";
 import Container from "@material-ui/core/Container";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
-import FormControl from "@material-ui/core/FormControl";
-import FormLabel from "@material-ui/core/FormLabel";
 import RadioGroup from "@material-ui/core/RadioGroup";
 import Radio from "@material-ui/core/Radio";
 import { FormControlLabel } from "@material-ui/core";
@@ -28,7 +26,7 @@ const Register = props => {
   const [userType, setUserType] = useState("");
 
   const register = body => {
-    dispatch({ type: REGISTER_START });
+    // dispatch({ type: REGISTER_START });
     axios
       .post(`https://better-professor.herokuapp.com/users`, body)
       .then(res => {
@@ -39,10 +37,14 @@ const Register = props => {
         return true;
       })
       .catch(err => {
-        console.log(err);
+        console.log(
+          `${err.response.status} ${err.response.data.error_description}`
+        );
         dispatch({
           type: REGISTER_FAIL,
-          payload: err
+          payload: `${err.response.status} ${
+            err.response.data.error_description
+          }`
         });
       });
   };
