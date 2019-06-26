@@ -16,7 +16,7 @@ export const LOGIN_FAIL = "LOGIN_FAIL";
 
 export const SET_USER_TYPE = "SET_USER_TYPE";
 
-export const STUDENT_SEARCH_SUCCESS = "STUDENT_SEARCH_SUCCESS";
+export const STUDENT_SEARCH = "STUDENT_SEARCH";
 export const STUDENT_SEARCH_FAIL = "STUDENT_SEARCH_FAIL";
 
 export const reducer = (state = initialState, action) => {
@@ -52,11 +52,11 @@ export const reducer = (state = initialState, action) => {
         error: action.payload,
         loggingIn: false
       };
-    case STUDENT_SEARCH_SUCCESS:
+    case STUDENT_SEARCH:
       return {
         ...state,
-        students: [action.payload],
-        error: ""
+        error: "",
+        students: action.payload
       };
     case STUDENT_SEARCH_FAIL:
       return {

@@ -26,7 +26,6 @@ const Register = props => {
   const [userType, setUserType] = useState("");
 
   const register = body => {
-    // dispatch({ type: REGISTER_START });
     axios
       .post(`https://better-professor.herokuapp.com/users`, body)
       .then(res => {

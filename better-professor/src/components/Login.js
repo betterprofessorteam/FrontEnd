@@ -13,7 +13,6 @@ const Login = props => {
   const [username, setUsername] = useState("");
 
   const login = () => {
-    // dispatch({ type: LOGIN_START });
     axios
       .post(
         "https://better-professor.herokuapp.com/oauth/token",

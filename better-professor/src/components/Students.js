@@ -1,14 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
 import axios from "axios";
 import { useStateValue } from "react-conflux";
-import {
-  stateContext,
-  STUDENT_SEARCH_SUCCESS,
-  STUDENT_SEARCH_FAIL
-} from "../store";
+import { stateContext, STUDENT_SEARCH, STUDENT_SEARCH_FAIL } from "../store";
 import Container from "@material-ui/core/Container";
-import AppBar from "@material-ui/core/AppBar";
 import Button from "@material-ui/core/Button";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
@@ -17,8 +11,32 @@ import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
 
+import Student from "./Student";
+
 const Students = () => {
   const [state, dispatch] = useStateValue(stateContext);
+
+  const [students, setStudents] = useState([]);
+
+  //   useEffect(() => {
+  //     axios
+  //       .get("https://better-professor.herokuapp.com/user/students", {
+  //         headers: {
+  //           Authorization: `Bearer ${localStorage.getItem("token")}`
+  //         }
+  //       })
+  //       .then(res => {
+  //         console.log("RES.DATA", res.data);
+  //         setStudents(res.data);
+  //       })
+  //       .catch(err => {
+  //         dispatch({
+  //           type: STUDENT_SEARCH_FAIL,
+  //           payload: `${err.response.status}
+  //           ${err.response.data.error_description}`
+  //         });
+  //       });
+  //   }, []);
 
   useEffect(() => {
     axios
@@ -29,7 +47,7 @@ const Students = () => {
       })
       .then(res => {
         console.log(res.data);
-        dispatch({ type: STUDENT_SEARCH_SUCCESS, payload: res.data });
+        dispatch({ type: STUDENT_SEARCH, payload: res.data });
       })
       .catch(err => {
         console.log(
@@ -45,7 +63,7 @@ const Students = () => {
   }, []);
 
   console.log("STUDENTS STATE", state);
-  console.table(state.students);
+  console.table(state.students[0]);
 
   const theStudents = [
     {
@@ -76,10 +94,6 @@ const Students = () => {
 
   return (
     <Container>
-      {/* <AppBar>
-        <h1>students</h1>
-      </AppBar> */}
-
       <Paper>
         <Table>
           <TableHead>
@@ -90,14 +104,8 @@ const Students = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {theStudents.map(student => (
-              <TableRow key={student.firstName}>
-                <TableCell>{`${student.lastName}, ${
-                  student.firstName
-                }`}</TableCell>
-                <TableCell>{student.email}</TableCell>
-                <TableCell>{student.username}</TableCell>
-              </TableRow>
+            {theStudents.map((student, index) => (
+              <Student student={student} index={index} key={index} />
             ))}
           </TableBody>
         </Table>
