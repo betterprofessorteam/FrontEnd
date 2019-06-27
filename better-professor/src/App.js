@@ -14,6 +14,7 @@ import Students from "./components/Students";
 import Inbox from "./components/Inbox";
 import SendMessage from "./components/SendMessage";
 import RegisterSuccess from "./components/RegisterSuccess";
+import UserProfile from "./components/UserProfile";
 
 const App = () => {
   return (
@@ -23,33 +24,35 @@ const App = () => {
       </div>
 
       <Route
-        path="/login"
-        render={props => {
-          return <Login {...props} />;
-        }}
-      />
-
-      <Route
         path="/register"
         render={props => {
           return <Register {...props} />;
         }}
       />
-
+      <Route
+        path="/register-success"
+        render={props => {
+          return <RegisterSuccess {...props} />;
+        }}
+      />
+      <Route
+        path="/login"
+        render={props => {
+          return <Login {...props} />;
+        }}
+      />
       <Route
         path="/my-bp"
         render={props => {
           return <Dashboard {...props} />;
         }}
       />
-
       <Route
         path="/my-bp/students"
         render={props => {
           return <Students {...props} />;
         }}
       />
-
       <Route
         path="/my-bp/calendar"
         render={props => {
@@ -69,9 +72,9 @@ const App = () => {
         }}
       />
       <Route
-        path="/register-success"
+        path="/my-bp/user-profile"
         render={props => {
-          return <RegisterSuccess {...props} />;
+          return <UserProfile {...props} />;
         }}
       />
     </StateProvider>

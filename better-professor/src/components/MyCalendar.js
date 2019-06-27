@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import Calendar from "react-calendar/dist/entry.nostyle";
+import Calendar from "react-calendar";
 
 const MyCalendar = () => {
   const [date, setDate] = useState(new Date());
