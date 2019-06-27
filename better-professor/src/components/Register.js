@@ -1,11 +1,6 @@
 import React, { useState } from "react";
 import { useStateValue } from "react-conflux";
-import {
-  stateContext,
-  REGISTER_SUCCESS,
-  REGISTER_FAIL,
-  SET_USER_TYPE
-} from "../store";
+import { stateContext, REGISTER_SUCCESS, REGISTER_FAIL } from "../store";
 import axios from "axios";
 import {
   FormControlLabel,
@@ -31,15 +26,12 @@ const Register = props => {
       .post(`https://better-professor.herokuapp.com/users`, body)
       .then(res => {
         console.log(res.data);
-        localStorage.setItem("username", res.data.username);
         dispatch({ type: REGISTER_SUCCESS });
         props.history.push("/register-success");
         return true;
       })
       .catch(err => {
-        console.log(
-          `${err.response.status} ${err.response.data.error_description}`
-        );
+        console.log(err.response);
         dispatch({
           type: REGISTER_FAIL,
           payload: `${err.response.status} ${
@@ -54,18 +46,19 @@ const Register = props => {
       <form
         onSubmit={e => {
           e.preventDefault();
-          dispatch({ type: SET_USER_TYPE, payload: userType });
           if (userType === "mentor") {
             const body = {
-              username,
-              password,
+              username: username,
+              password: password,
+              email: email,
               mentorData: { firstName, lastName }
             };
             register(body);
           } else {
             const body = {
-              username,
-              password,
+              username: username,
+              password: password,
+              email: email,
               studentData: { firstName, lastName }
             };
             register(body);
@@ -134,3 +127,4 @@ const Register = props => {
 };
 
 export default Register;
+

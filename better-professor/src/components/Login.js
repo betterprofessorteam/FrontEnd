@@ -2,10 +2,20 @@ import React, { useState } from "react";
 import { useStateValue } from "react-conflux";
 import { stateContext, LOGIN_SUCCESS, LOGIN_FAIL } from "../store";
 import axios from "axios";
-import { Button, TextField, Container } from "@material-ui/core";
+import {
+  Button,
+  TextField,
+  Container,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogContentText,
+  DialogActions
+} from "@material-ui/core";
 
 const Login = props => {
   const [state, dispatch] = useStateValue(stateContext);
+  const [open, setOpen] = useState(false);
 
   const [password, setPassword] = useState("");
   const [username, setUsername] = useState("");
@@ -15,8 +25,8 @@ const Login = props => {
       .post(
         "https://better-professor.herokuapp.com/oauth/token",
         new URLSearchParams({
-          username,
-          password,
+          username: username,
+          password: password,
           grant_type: "password"
         }),
         {
@@ -28,15 +38,13 @@ const Login = props => {
         }
       )
       .then(res => {
+        console.log(res.data);
         localStorage.setItem("token", res.data.access_token);
         dispatch({ type: LOGIN_SUCCESS });
         props.history.push("/my-bp");
-        return true;
       })
       .catch(err => {
-        console.log(
-          `${err.response.status} ${err.response.data.error_description}`
-        );
+        handleOpen();
         dispatch({
           type: LOGIN_FAIL,
           payload: `${err.response.status} ${
@@ -46,8 +54,34 @@ const Login = props => {
       });
   };
 
+  function handleOpen() {
+    setOpen(true);
+  }
+
+  function handleClose() {
+    setOpen(false);
+  }
+
   return (
     <Container>
+      <Dialog
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">Opps!</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            Invalid username and password.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose} color="primary">
+            Close
+          </Button>
+        </DialogActions>
+      </Dialog>
       <form
         onSubmit={e => {
           e.preventDefault();
@@ -77,3 +111,4 @@ const Login = props => {
 };
 
 export default Login;
+

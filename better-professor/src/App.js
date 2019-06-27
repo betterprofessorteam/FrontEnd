@@ -1,5 +1,5 @@
 import React from "react";
-import { Route, Link } from "react-router-dom";
+import { Route } from "react-router-dom";
 import { StateProvider } from "react-conflux";
 import { reducer } from "./store/index";
 import { stateContext } from "./store";
@@ -14,7 +14,7 @@ import Students from "./components/Students";
 import Inbox from "./components/Inbox";
 import SendMessage from "./components/SendMessage";
 import RegisterSuccess from "./components/RegisterSuccess";
-import UserProfile from "./components/UserProfile";
+import StudentProfile from "./components/StudentProfile";
 
 const App = () => {
   return (
@@ -48,6 +48,7 @@ const App = () => {
         }}
       />
       <Route
+        exact
         path="/my-bp/students"
         render={props => {
           return <Students {...props} />;
@@ -72,9 +73,9 @@ const App = () => {
         }}
       />
       <Route
-        path="/my-bp/user-profile"
+        path="/my-bp/students/:id"
         render={props => {
-          return <UserProfile {...props} />;
+          return <StudentProfile {...props} />;
         }}
       />
     </StateProvider>
