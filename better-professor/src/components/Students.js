@@ -17,7 +17,7 @@ import SearchIcon from "@material-ui/icons/Search";
 
 import Student from "./Student";
 
-const Students = () => {
+const Students = props => {
   const [state, dispatch] = useStateValue(stateContext);
 
   const [students, setStudents] = useState([]);
@@ -84,10 +84,20 @@ const Students = () => {
                     return lc.includes(filter);
                   })
                   .map((student, index) => (
-                    <Student student={student} index={index} key={index} />
+                    <Student
+                      student={student}
+                      index={index}
+                      key={index}
+                      history={props.history}
+                    />
                   ))
               : students.map((student, index) => (
-                  <Student student={student} index={index} key={index} />
+                  <Student
+                    student={student}
+                    index={index}
+                    key={index}
+                    history={props.history}
+                  />
                 ))}
           </TableBody>
         </Table>

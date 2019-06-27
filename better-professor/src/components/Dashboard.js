@@ -1,5 +1,14 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import { useStateValue } from "react-conflux";
+import axios from "axios";
+import {
+  stateContext,
+  GET_STUDENTS_SUCCESS,
+  GET_STUDENTS_FAIL,
+  SET_USER_TYPE
+} from "../store";
+
 import { withStyles } from "@material-ui/core/styles";
 import InboxIcon from "@material-ui/icons/MoveToInbox";
 import SearchIcon from "@material-ui/icons/Search";
@@ -45,7 +54,79 @@ const StyledMenuItem = withStyles(theme => ({
   }
 }))(MenuItem);
 
-const Dashboard = () => {
+const Dashboard = props => {
+  const [state, dispatch] = useStateValue(stateContext);
+
+  const getUserId = () => {
+    axios
+      .get("https://better-professor.herokuapp.com/user", {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`
+        }
+      })
+      .then(res => {
+        console.log(res.data);
+        localStorage.setItem("userId", res.data.userId);
+        return true;
+      })
+      .catch(err => {
+        console.log(err.response);
+        alert(
+          "Sorry, something seems to have went wrong. Please try logging in again."
+        );
+      });
+  };
+
+  const getStudents = () => {
+    axios
+      .get("https://better-professor.herokuapp.com/user/mentor/students", {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`
+        }
+      })
+      .then(res => {
+        console.log("GET STUDENTS RES.DATA", res.data);
+        dispatch({ type: GET_STUDENTS_SUCCESS, payload: res.data });
+      })
+      .catch(err => {
+        console.log("GET STUDENTS ERROR", err);
+        dispatch({
+          type: GET_STUDENTS_FAIL,
+          payload: err.response.data.error_description
+        });
+        alert(
+          "Something went wrong when loading this page. Please try logging in again."
+        );
+      });
+  };
+
+  const setUserType = () => {
+    axios
+      .get("https://better-professor.herokuapp.com/user", {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`
+        }
+      })
+      .then(res => {
+        console.log("USER INFO RES.DATA", res.data);
+        if (Object.keys(res.data).includes("mentorData")) {
+          dispatch({ type: SET_USER_TYPE, payload: "mentor" });
+          getStudents();
+        } else {
+          dispatch({ type: SET_USER_TYPE, payload: "student" });
+        }
+      })
+      .catch(err => {
+        console.log("USER INFO ERR", err);
+      });
+  };
+
+  useEffect(() => {
+    setUserType();
+    getStudents();
+    getUserId();
+  }, []);
+
   const [anchorEl, setAnchorEl] = useState(null);
 
   function handleClick(event) {
@@ -58,6 +139,14 @@ const Dashboard = () => {
 
   return (
     <Container>
+      <Button
+        onClick={() => {
+          localStorage.clear();
+          props.history.push("/login");
+        }}
+      >
+        Log Out
+      </Button>
       <Button
         aria-controls="customized-menu"
         aria-haspopup="true"

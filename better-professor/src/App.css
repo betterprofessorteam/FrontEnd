@@ -18,3 +18,15 @@ div {
   font-family: "Roboto", sans-serif;
   font-size: 0.85rem;
 }
+
+.loading-messages {
+  margin: 2rem 0rem 2rem 0rem;
+}
+
+.inbox {
+  margin-top: 2rem;
+}
+
+.message-table {
+  margin-top: 1.5rem;
+}

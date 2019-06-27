@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { AppBar } from "@material-ui/core";
+import { LinearProgress } from "@material-ui/core";
 import CheckIcon from "@material-ui/icons/CheckCircle";
 
 const RegisterSuccess = props => {
@@ -11,9 +11,8 @@ const RegisterSuccess = props => {
 
   return (
     <>
-      <AppBar>
-        <CheckIcon fontSize="large" />
-      </AppBar>
+      <LinearProgress />
+      <br />
       <h1 style={{ marginTop: "2rem", fontSize: "2rem", textAlign: "center" }}>
         Account successfully registered!
       </h1>
