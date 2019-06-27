@@ -1,0 +1,32 @@
+@import url("https://fonts.googleapis.com/css?family=Roboto&display=swap");
+
+.App {
+  font-family: "Roboto", sans-serif;
+  text-align: center;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+a,
+form,
+div {
+  font-family: "Roboto", sans-serif;
+  font-size: 0.85rem;
+}
+
+.loading-messages {
+  margin: 2rem 0rem 2rem 0rem;
+}
+
+.inbox {
+  margin-top: 2rem;
+}
+
+.message-table {
+  margin-top: 1.5rem;
+}
