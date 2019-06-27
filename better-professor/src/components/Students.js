@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useStateValue } from "react-conflux";
-import { stateContext, STUDENT_SEARCH, STUDENT_SEARCH_FAIL } from "../store";
+import { stateContext, STUDENT_SEARCH_FAIL } from "../store";
 import {
   Container,
   Table,
@@ -31,7 +31,7 @@ const Students = () => {
         }
       })
       .then(res => {
-        console.log("RES.DATA", res.data[0].studentData);
+        console.log("RES.DATA", res.data);
         setStudents(
           res.data.sort((a, b) =>
             a.studentData.lastName > b.studentData.lastName
@@ -51,30 +51,6 @@ const Students = () => {
       });
   }, []);
 
-  //   useEffect(() => {
-  //     axios
-  //       .get("https://better-professor.herokuapp.com/user/students", {
-  //         headers: {
-  //           Authorization: `Bearer ${localStorage.getItem("token")}`
-  //         }
-  //       })
-  //       .then(res => {
-  //         console.log(res.data);
-  //         dispatch({ type: STUDENT_SEARCH, payload: res.data });
-  //       })
-  //       .catch(err => {
-  //         console.log(
-  //           `${err.response.status} ${err.response.data.error_description}`
-  //         );
-  //         dispatch({
-  //           type: STUDENT_SEARCH_FAIL,
-  //           payload: `${err.response.status} ${
-  //             err.response.data.error_description
-  //           }`
-  //         });
-  //       });
-  //   }, []);
-
   return (
     <Container>
       <TextField
@@ -82,13 +58,6 @@ const Students = () => {
         variant="outlined"
         value={searchText}
         onChange={e => setSearchText(e.target.value)}
-        // onChange={e => {
-        //   setStudents(
-        //     students.filter(student =>
-        //       student.studentData.lastName.includes(e.target.value)
-        //     )
-        //   );
-        // }}
         InputProps={{
           startAdornment: (
             <InputAdornment position="start">

@@ -1,5 +1,6 @@
 import React from "react";
 import { useStateValue } from "react-conflux";
+import { Link } from "react-router-dom";
 import { stateContext } from "../store";
 import { TableCell, TableRow } from "@material-ui/core";
 
@@ -9,9 +10,11 @@ const Student = props => {
   return (
     <>
       <TableRow key={props.student.studentData.firstName}>
-        <TableCell>{`${props.student.studentData.lastName}, ${
-          props.student.studentData.firstName
-        }`}</TableCell>
+        <Link style={{ textDecoration: "none" }} to="/my-bp/user-profile">
+          <TableCell>{`${props.student.studentData.lastName}, ${
+            props.student.studentData.firstName
+          }`}</TableCell>
+        </Link>
         <TableCell>{props.student.email}</TableCell>
         <TableCell>{props.student.username}</TableCell>
       </TableRow>

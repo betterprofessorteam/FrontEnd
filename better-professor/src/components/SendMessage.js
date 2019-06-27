@@ -1,12 +1,28 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { Container, Button } from "@material-ui/core";
+import {
+  Container,
+  Button,
+  TextField,
+  InputLabel,
+  Select
+} from "@material-ui/core";
 
 const SendMessage = () => {
   return (
     <Container>
       <form>
-        <input type="text" placeholder="Title/Subject" />
+        <TextField type="text" placeholder="Title/Subject" variant="outlined" />
+
+        <InputLabel>Send To</InputLabel>
+        <Select multiple />
+        <TextField
+          label="Message Body"
+          variant="outlined"
+          multiline
+          fullWidth
+          margin="normal"
+        />
       </form>
     </Container>
   );
