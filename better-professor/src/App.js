@@ -17,6 +17,7 @@ import RegisterSuccess from "./components/RegisterSuccess";
 import StudentProfile from "./components/StudentProfile";
 import MyStudents from "./components/MyStudents";
 import Account from "./components/Account";
+import Dash from "./components/Dash";
 
 const App = () => {
   return (
@@ -90,6 +91,12 @@ const App = () => {
         path="/my-bp/account"
         render={props => {
           return <Account {...props} />;
+        }}
+      />
+      <Route
+        path="/my-bp/dash"
+        render={props => {
+          return <Dash {...props} />;
         }}
       />
     </StateProvider>

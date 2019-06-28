@@ -12,9 +12,15 @@ import {
   TableRow,
   TableCell,
   TableBody,
-  Button
+  Button,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogContentText,
+  DialogActions
 } from "@material-ui/core";
 import AddCircleIcon from "@material-ui/icons/AddCircle";
+import RemoveCircleIcon from "@material-ui/icons/RemoveCircle";
 
 const StudentProfile = props => {
   const [state, dispatch] = useStateValue(stateContext);
@@ -22,6 +28,8 @@ const StudentProfile = props => {
   const studentId = props.match.params.id;
   const [student, setStudent] = useState(null);
   const [projects, setProjects] = useState([]);
+  const [isAdded, setIsAdded] = useState(false);
+  const [open, setOpen] = useState(false);
 
   useEffect(() => {
     axios
@@ -44,6 +52,7 @@ const StudentProfile = props => {
           )
           .then(res => {
             console.log("STUDENT PROJECTS: ", res.data);
+            setIsAdded(true);
             setProjects(res.data);
           })
           .catch(error => {
@@ -62,7 +71,6 @@ const StudentProfile = props => {
   }
 
   const addStudent = () => {
-    console.log("STUDENT ID: ", studentId);
     axios
       .post(
         `https://better-professor.herokuapp.com/user/mentor/students/${studentId}/add`,
@@ -86,22 +94,83 @@ const StudentProfile = props => {
       });
   };
 
+  const removeStudent = () => {
+    axios
+      .post(
+        `https://better-professor.herokuapp.com/user/mentor/students/${studentId}/remove`,
+        null,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`
+          }
+        }
+      )
+      .then(res => {
+        console.log("RESPONSE: ", res);
+        props.history.push("/my-bp/my-students");
+      })
+      .catch(err => {
+        console.log("ERROR: ", err.response);
+      });
+  };
+
+  function handleOpen() {
+    setOpen(true);
+  }
+
+  function handleClose() {
+    setOpen(false);
+  }
+
   return (
     <div style={{ marginTop: "5rem" }}>
+      <Dialog
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">Are you sure?</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            You will no longer be able to contact this student or view their
+            projects. Do you still want to remove them?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose} color="primary">
+            Nevermind
+          </Button>
+          <Button onClick={removeStudent} color="primary">
+            Yes, Remove Student
+          </Button>
+        </DialogActions>
+      </Dialog>
       <h1 style={{ fontSize: "3rem", marginBottom: "1rem" }}>
         {student.studentData.firstName} {student.studentData.lastName}
       </h1>
 
-      <Button
-        onClick={e => {
-          e.preventDefault();
-          addStudent();
-        }}
-      >
-        <AddCircleIcon />
-        Add to My Students
-      </Button>
-
+      {!isAdded ? (
+        <Button
+          onClick={e => {
+            e.preventDefault();
+            addStudent();
+          }}
+        >
+          <AddCircleIcon />
+          Add to My Students
+        </Button>
+      ) : (
+        <Button
+          onClick={e => {
+            e.preventDefault();
+            handleOpen();
+          }}
+        >
+          <RemoveCircleIcon />
+          Remove from students
+        </Button>
+      )}
       <h3 style={{ fontSize: "1rem", marginTop: "1.5rem" }}>
         Email: {student.email}
       </h3>

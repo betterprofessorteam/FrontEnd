@@ -93,7 +93,6 @@ const Dashboard = props => {
       .then(res => {
         console.log(res.data);
         localStorage.setItem("userId", res.data.userId);
-        return true;
       })
       .catch(err => {
         console.log(err.response);
@@ -135,9 +134,16 @@ const Dashboard = props => {
         console.log("USER INFO RES.DATA", res.data);
         if (Object.keys(res.data).includes("mentorData")) {
           dispatch({ type: SET_USER_TYPE, payload: "mentor" });
+          localStorage.setItem("userType", "mentor");
+          localStorage.setItem("firstName", res.data.mentorData.firstName);
+          localStorage.setItem("lastName", res.data.mentorData.lastName);
+
           getStudents();
         } else {
           dispatch({ type: SET_USER_TYPE, payload: "student" });
+          localStorage.setItem("userType", "student");
+          localStorage.setItem("firstName", res.data.studentData.firstName);
+          localStorage.setItem("lastName", res.data.studentData.lastName);
         }
       })
       .catch(err => {
@@ -184,6 +190,16 @@ const Dashboard = props => {
   function accountClick() {
     handleMenuClose();
     props.history.push("/my-bp/account");
+  }
+
+  function sendMessageClick() {
+    handleMenuClose();
+    props.history.push("/my-bp/send-message");
+  }
+
+  function inboxClick() {
+    handleMenuClose();
+    props.history.push("/my-bp/inbox");
   }
 
   return (
@@ -241,11 +257,16 @@ const Dashboard = props => {
               </div>
             )}
             <MenuItem onClick={myCalendarClick}>My Calendar</MenuItem>
-            <MenuItem>Inbox</MenuItem>
-            <MenuItem>Trackers</MenuItem>
+            <MenuItem onClick={inboxClick}>Inbox</MenuItem>
+            <MenuItem onClick={sendMessageClick}>Send Message</MenuItem>
           </Menu>
           <Typography variant="h6">Menu</Typography>
+          <div style={{ marginLeft: "3rem", marginRight: "7rem" }}>
+            <h1 style={{ fontSize: "2rem" }}>Better Professor</h1>
+          </div>
           <Button
+            color="inherit"
+            variant="outlined"
             onClick={() => {
               localStorage.clear();
               props.history.push("/login");
@@ -263,54 +284,6 @@ const Dashboard = props => {
           </IconButton>
         </Toolbar>
       </AppBar>
-
-      {/* <Button
-        aria-controls="customized-menu"
-        aria-haspopup="true"
-        variant="contained"
-        color="primary"
-        onClick={handleClick}
-      >
-        Menu
-      </Button>
-      <StyledMenu
-        id="customized-menu"
-        anchorEl={anchorEl}
-        keepMounted
-        open={Boolean(anchorEl)}
-        onClose={handleMenuClose}
-      >
-        <StyledMenuItem>
-          {state.userType === "mentor" && (
-            <>
-              <ListItemIcon>
-                <SearchIcon />
-              </ListItemIcon>
-              <Link to="/my-bp/students">
-                <ListItemText primary="Search Students" />
-              </Link>
-            </>
-          )}
-          <ListItemIcon>
-            <CalendarIcon />
-          </ListItemIcon>
-          <Link to="/my-bp/calendar">
-            <ListItemText primary="My Calendar" />
-          </Link>
-          <ListItemIcon>
-            <InboxIcon />
-          </ListItemIcon>
-          <Link to="/my-bp/inbox">
-            <ListItemText primary="Inbox" />
-          </Link>
-          <ListItemIcon>
-            <SendIcon />
-          </ListItemIcon>
-          <Link to="/my-bp/send-message">
-            <ListItemText primary="Send Message" />
-          </Link>
-        </StyledMenuItem>
-      </StyledMenu> */}
     </Container>
   );
 };

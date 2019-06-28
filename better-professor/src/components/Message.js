@@ -14,7 +14,6 @@ import {
 import RadioButtonCheckedIcon from "@material-ui/icons/RadioButtonChecked";
 import RadioButtonUheckedIcon from "@material-ui/icons/RadioButtonUnchecked";
 import ExpandMore from "@material-ui/icons/ExpandMore";
-import CancelIcon from "@material-ui/icons/Cancel";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -79,7 +78,7 @@ function Message(props) {
       )
       .then(res => {
         console.log(res.data);
-        alert("Read Message");
+        window.location.reload();
       })
       .catch(err => {
         console.log(err.response);

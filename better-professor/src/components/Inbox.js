@@ -22,7 +22,7 @@ import {
   FormGroup
 } from "@material-ui/core";
 
-const Inbox = () => {
+const Inbox = props => {
   const [receivedMessages, setReceivedMessages] = useState([]);
   const [sentMessages, setSentMessages] = useState([]);
   const [open, setOpen] = useState(false);
@@ -77,7 +77,7 @@ const Inbox = () => {
   }
 
   return (
-    <div className="inbox">
+    <div style={{ marginTop: "5rem" }}>
       <Dialog
         open={open}
         onClose={handleClose}
@@ -133,13 +133,23 @@ const Inbox = () => {
             </TableHead>
             <TableBody>
               {loaded === false
-                ? "Loading"
+                ? "Loading..."
                 : sentView === false
                 ? receivedMessages.map((message, index) => (
-                    <Message message={message} key={index} index={index} />
+                    <Message
+                      message={message}
+                      key={index}
+                      index={index}
+                      history={props.history}
+                    />
                   ))
                 : sentMessages.map((message, index) => (
-                    <Message message={message} key={index} index={index} />
+                    <Message
+                      message={message}
+                      key={index}
+                      index={index}
+                      history={props.history}
+                    />
                   ))}
             </TableBody>
           </Table>
