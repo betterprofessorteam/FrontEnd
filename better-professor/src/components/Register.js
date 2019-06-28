@@ -43,7 +43,9 @@ const Register = props => {
 
   return (
     <Container>
+      <h1 style={{ fontSize: "2rem" }}>Register an account with us!</h1>
       <form
+        className="register-group"
         onSubmit={e => {
           e.preventDefault();
           if (userType === "mentor") {
@@ -66,6 +68,7 @@ const Register = props => {
         }}
       >
         <TextField
+          fullWidth="true"
           type="text"
           placeholder="First Name"
           variant="outlined"
@@ -73,6 +76,7 @@ const Register = props => {
           onChange={e => setFirstName(e.target.value)}
         />
         <TextField
+          fullWidth="true"
           type="text"
           placeholder="Last Name"
           variant="outlined"
@@ -80,6 +84,7 @@ const Register = props => {
           onChange={e => setLastName(e.target.value)}
         />
         <TextField
+          fullWidth="true"
           type="text"
           placeholder="Email"
           variant="outlined"
@@ -87,6 +92,7 @@ const Register = props => {
           onChange={e => setEmail(e.target.value)}
         />
         <TextField
+          fullWidth="true"
           type="text"
           placeholder="Username"
           variant="outlined"
@@ -94,6 +100,7 @@ const Register = props => {
           onChange={e => setUsername(e.target.value)}
         />
         <TextField
+          fullWidth="true"
           type="password"
           placeholder="Password"
           variant="outlined"
@@ -118,7 +125,12 @@ const Register = props => {
           letters and numbers
         </p>
 
-        <Button type="submit" variant="contained" color="primary">
+        <Button
+          fullWidth="true"
+          type="submit"
+          variant="contained"
+          color="primary"
+        >
           Submit
         </Button>
       </form>
@@ -127,4 +139,3 @@ const Register = props => {
 };
 
 export default Register;
-

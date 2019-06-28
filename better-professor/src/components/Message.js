@@ -14,7 +14,6 @@ import {
 import RadioButtonCheckedIcon from "@material-ui/icons/RadioButtonChecked";
 import RadioButtonUheckedIcon from "@material-ui/icons/RadioButtonUnchecked";
 import ExpandMore from "@material-ui/icons/ExpandMore";
-import CancelIcon from "@material-ui/icons/Cancel";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -70,6 +69,7 @@ function Message(props) {
         `https://better-professor.herokuapp.com/messages/${
           props.message.messageId
         }/read`,
+        null,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`
@@ -78,6 +78,7 @@ function Message(props) {
       )
       .then(res => {
         console.log(res.data);
+        window.location.reload();
       })
       .catch(err => {
         console.log(err.response);
@@ -110,6 +111,7 @@ function Message(props) {
         <TableCell>
           <Button
             onClick={e => {
+              e.preventDefault();
               handleOpen();
             }}
           >
@@ -136,18 +138,18 @@ function Message(props) {
               <Typography variant="subtitle1" id="modal-description">
                 {props.message.text}
               </Typography>
-              <Button
-                onClick={e => {
-                  if (
-                    props.message.receiverUserId ===
-                    localStorage.getItem("userId")
-                  ) {
-                    markAsRead();
-                  }
-                }}
-              >
-                Mark as Read
-              </Button>
+              {props.message.receiverUserId == localStorage.getItem("userId") &&
+                props.message.timeRead == 0 && (
+                  <Button
+                    onClick={e => {
+                      e.preventDefault();
+
+                      markAsRead();
+                    }}
+                  >
+                    Mark as Read
+                  </Button>
+                )}
             </div>
           </Modal>
         </TableCell>

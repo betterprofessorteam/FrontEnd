@@ -22,26 +22,6 @@ const SendMessage = props => {
   const [messageText, setMessageText] = useState("");
   const [receiverUserId, setReceiverUserId] = useState("");
 
-  // useEffect(() => {
-  //   axios
-  //     .get("https://better-professor.herokuapp.com/user", {
-  //       headers: {
-  //         Authorization: `Bearer ${localStorage.getItem("token")}`
-  //       }
-  //     })
-  //     .then(res => {
-  //       console.log(res.data);
-  //       localStorage.setItem("userId", res.data.userId);
-  //       return true;
-  //     })
-  //     .catch(err => {
-  //       console.log(err.response);
-  //       alert(
-  //         "Sorry, something seems to have went wrong. Please try logging in again."
-  //       );
-  //     });
-  // }, []);
-
   const sendMessage = body => {
     axios
       .post(`https://better-professor.herokuapp.com/messages`, body, {
@@ -51,6 +31,7 @@ const SendMessage = props => {
       })
       .then(res => {
         console.log("RES.DATA", res.data);
+        props.history.push("/my-bp/inbox");
       })
       .catch(err => {
         console.log(err.response);
@@ -60,7 +41,7 @@ const SendMessage = props => {
   };
 
   return (
-    <Container>
+    <div style={{ marginTop: "6rem" }}>
       <form
         onSubmit={e => {
           e.preventDefault();
@@ -73,29 +54,35 @@ const SendMessage = props => {
           sendMessage(body);
         }}
       >
-        <InputLabel>Send To</InputLabel>
-        <Select
-          value={receiverUserId}
-          onChange={e => {
-            setReceiverUserId(e.target.value);
-          }}
-        >
-          {state.students.map(student => (
-            <MenuItem key={student.userId} value={student.userId}>{`${
-              student.studentData.lastName
-            }, ${student.studentData.firstName}`}</MenuItem>
-          ))}
-        </Select>
+        <div style={{ display: "flex" }}>
+          <div
+            style={{ marginLeft: "1rem", marginRight: "6rem", width: "6rem" }}
+          >
+            <InputLabel>Send To</InputLabel>
+            <Select
+              value={receiverUserId}
+              onChange={e => {
+                setReceiverUserId(e.target.value);
+              }}
+            >
+              {state.students.map(student => (
+                <MenuItem key={student.userId} value={student.userId}>{`${
+                  student.studentData.lastName
+                }, ${student.studentData.firstName}`}</MenuItem>
+              ))}
+            </Select>
+          </div>
 
-        <TextField
-          type="text"
-          label="Title/Subject"
-          variant="outlined"
-          value={titleText}
-          onChange={e => {
-            setTitleText(e.target.value);
-          }}
-        />
+          <TextField
+            type="text"
+            label="Title/Subject"
+            variant="outlined"
+            value={titleText}
+            onChange={e => {
+              setTitleText(e.target.value);
+            }}
+          />
+        </div>
 
         <TextField
           value={messageText}
@@ -108,9 +95,11 @@ const SendMessage = props => {
           fullWidth
           margin="normal"
         />
-        <Button type="submit">Send Message</Button>
+        <Button variant="contained" color="primary" type="submit">
+          Send Message
+        </Button>
       </form>
-    </Container>
+    </div>
   );
 };
 

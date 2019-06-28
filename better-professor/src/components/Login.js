@@ -41,7 +41,7 @@ const Login = props => {
         console.log(res.data);
         localStorage.setItem("token", res.data.access_token);
         dispatch({ type: LOGIN_SUCCESS });
-        props.history.push("/my-bp");
+        props.history.push("/my-bp/dash");
       })
       .catch(err => {
         handleOpen();
@@ -111,4 +111,3 @@ const Login = props => {
 };
 
 export default Login;
-

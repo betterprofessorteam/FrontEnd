@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import Calendar from "react-calendar";
+import moment from "moment";
 
 const MyCalendar = () => {
   const [date, setDate] = useState(new Date());
@@ -7,8 +8,23 @@ const MyCalendar = () => {
   const onChange = date => setDate(date);
 
   return (
-    <div>
-      <Calendar onChange={onChange} value={date} />
+    <div
+      style={{
+        marginTop: "5rem",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center"
+      }}
+    >
+      <h1 style={{ fontSize: "2rem" }}>My Calendar</h1>
+      <Calendar
+        onChange={e => {
+          onChange();
+          console.log(moment(e).format("MMMM Do YYYY"));
+        }}
+        value={date}
+      />
     </div>
   );
 };

@@ -9,18 +9,29 @@ import {
   SET_USER_TYPE
 } from "../store";
 
-import { withStyles } from "@material-ui/core/styles";
+import { withStyles, makeStyles } from "@material-ui/core/styles";
 import InboxIcon from "@material-ui/icons/MoveToInbox";
 import SearchIcon from "@material-ui/icons/Search";
 import SendIcon from "@material-ui/icons/Send";
 import CalendarIcon from "@material-ui/icons/CalendarToday";
+import MenuIcon from "@material-ui/icons/Menu";
+import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 import {
   Container,
   Button,
   Menu,
   MenuItem,
   ListItemIcon,
-  ListItemText
+  ListItemText,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogContentText,
+  DialogActions,
+  IconButton,
+  AppBar,
+  Toolbar,
+  Typography
 } from "@material-ui/core";
 
 const StyledMenu = withStyles({
@@ -54,8 +65,23 @@ const StyledMenuItem = withStyles(theme => ({
   }
 }))(MenuItem);
 
+const useStyles = makeStyles({
+  list: {
+    width: 250
+  },
+  fullList: {
+    width: "auto"
+  }
+});
+
 const Dashboard = props => {
   const [state, dispatch] = useStateValue(stateContext);
+
+  const classes = useStyles();
+
+  const [open, setOpen] = useState(false);
+  const [anchorEl, setAnchorEl] = useState(null);
+  const openMenu = Boolean(anchorEl);
 
   const getUserId = () => {
     axios
@@ -67,7 +93,6 @@ const Dashboard = props => {
       .then(res => {
         console.log(res.data);
         localStorage.setItem("userId", res.data.userId);
-        return true;
       })
       .catch(err => {
         console.log(err.response);
@@ -94,9 +119,7 @@ const Dashboard = props => {
           type: GET_STUDENTS_FAIL,
           payload: err.response.data.error_description
         });
-        alert(
-          "Something went wrong when loading this page. Please try logging in again."
-        );
+        handleOpen();
       });
   };
 
@@ -111,9 +134,16 @@ const Dashboard = props => {
         console.log("USER INFO RES.DATA", res.data);
         if (Object.keys(res.data).includes("mentorData")) {
           dispatch({ type: SET_USER_TYPE, payload: "mentor" });
+          localStorage.setItem("userType", "mentor");
+          localStorage.setItem("firstName", res.data.mentorData.firstName);
+          localStorage.setItem("lastName", res.data.mentorData.lastName);
+
           getStudents();
         } else {
           dispatch({ type: SET_USER_TYPE, payload: "student" });
+          localStorage.setItem("userType", "student");
+          localStorage.setItem("firstName", res.data.studentData.firstName);
+          localStorage.setItem("lastName", res.data.studentData.lastName);
         }
       })
       .catch(err => {
@@ -123,73 +153,144 @@ const Dashboard = props => {
 
   useEffect(() => {
     setUserType();
-    getStudents();
     getUserId();
   }, []);
-
-  const [anchorEl, setAnchorEl] = useState(null);
 
   function handleClick(event) {
     setAnchorEl(event.currentTarget);
   }
 
-  function handleClose() {
+  function handleMenuClose() {
     setAnchorEl(null);
+  }
+
+  function handleOpen() {
+    setOpen(true);
+  }
+
+  function handleClose() {
+    setOpen(false);
+    props.history.push("/login");
+  }
+
+  function searchStudentsClick() {
+    handleMenuClose();
+    props.history.push("/my-bp/students");
+  }
+
+  function myCalendarClick() {
+    handleMenuClose();
+    props.history.push("/my-bp/calendar");
+  }
+  function myStudentsClick() {
+    handleMenuClose();
+    props.history.push("/my-bp/my-students");
+  }
+
+  function accountClick() {
+    handleMenuClose();
+    props.history.push("/my-bp/account");
+  }
+
+  function sendMessageClick() {
+    handleMenuClose();
+    props.history.push("/my-bp/send-message");
+  }
+
+  function inboxClick() {
+    handleMenuClose();
+    props.history.push("/my-bp/inbox");
+  }
+
+  function dashClick() {
+    handleMenuClose();
+    props.history.push("/my-bp/dash");
   }
 
   return (
     <Container>
-      <Button
-        onClick={() => {
-          localStorage.clear();
-          props.history.push("/login");
-        }}
-      >
-        Log Out
-      </Button>
-      <Button
-        aria-controls="customized-menu"
-        aria-haspopup="true"
-        variant="contained"
-        color="primary"
-        onClick={handleClick}
-      >
-        Menu
-      </Button>
-      <StyledMenu
-        id="customized-menu"
-        anchorEl={anchorEl}
-        keepMounted
-        open={Boolean(anchorEl)}
+      <Dialog
+        open={open}
         onClose={handleClose}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
       >
-        <StyledMenuItem>
-          <ListItemIcon>
-            <SearchIcon />
-          </ListItemIcon>
-          <Link to="/my-bp/students">
-            <ListItemText primary="Search Students" />
-          </Link>
-          <ListItemIcon>
-            <CalendarIcon />
-          </ListItemIcon>
-          <Link to="/my-bp/calendar">
-            <ListItemText primary="My Calendar" />
-          </Link>
-          <ListItemIcon>
-            <InboxIcon />
-          </ListItemIcon>
-          <Link to="/my-bp/inbox">
-            <ListItemText primary="Inbox" />
-          </Link>
-          <ListItemIcon>
-            <SendIcon />
-          </ListItemIcon>
-          <Link to="/my-bp/send-message">
-            <ListItemText primary="Send Message" />
-          </Link>
-        </StyledMenuItem>
-      </StyledMenu>
+        <DialogTitle id="alert-dialog-title">Opps!</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            Something went wrong when loading the page. Please try logging in
+            again.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose} color="primary">
+            Close
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      <AppBar>
+        <Toolbar>
+          <IconButton
+            aria-haspopup="true"
+            color="inherit"
+            onClick={handleClick}
+            edge="start"
+          >
+            <MenuIcon />
+          </IconButton>
+          <Menu
+            anchorEl={anchorEl}
+            anchorOrigin={{
+              vertical: "top",
+              horizontal: "right"
+            }}
+            keepMounted
+            transformOrigin={{
+              vertical: "top",
+              horizontal: "right"
+            }}
+            open={openMenu}
+            onClose={handleMenuClose}
+          >
+            <MenuItem onClick={dashClick}>Upcoming Deadlines</MenuItem>
+
+            {state.userType === "mentor" && (
+              <div>
+                <MenuItem onClick={searchStudentsClick}>
+                  Search Students
+                </MenuItem>
+                <MenuItem onClick={myStudentsClick}>My Students</MenuItem>
+              </div>
+            )}
+            <MenuItem onClick={myCalendarClick}>My Calendar</MenuItem>
+            <MenuItem onClick={inboxClick}>Inbox</MenuItem>
+            <MenuItem onClick={sendMessageClick}>Send Message</MenuItem>
+          </Menu>
+          <Typography variant="h6">Menu</Typography>
+          <div style={{ marginLeft: "3rem", marginRight: "7rem" }}>
+            <h1 style={{ fontSize: "2rem" }}>Better Professor</h1>
+          </div>
+          <Button
+            color="inherit"
+            variant="outlined"
+            onClick={() => {
+              localStorage.clear();
+              props.history.push("/login");
+            }}
+          >
+            Log Out
+          </Button>
+          <IconButton
+            edge="end"
+            aria-haspopup="true"
+            color="inherit"
+            onClick={accountClick}
+          >
+            <AccountCircleIcon />
+          </IconButton>
+        </Toolbar>
+      </AppBar>
     </Container>
   );
 };

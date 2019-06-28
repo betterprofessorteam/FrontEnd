@@ -18,14 +18,16 @@ import {
   DialogContent,
   DialogContentText,
   DialogActions,
-  Switch
+  Switch,
+  FormGroup
 } from "@material-ui/core";
 
-const Inbox = () => {
+const Inbox = props => {
   const [receivedMessages, setReceivedMessages] = useState([]);
   const [sentMessages, setSentMessages] = useState([]);
   const [open, setOpen] = useState(false);
   const [sentView, setSentView] = useState(false);
+  const [loaded, setLoaded] = useState(false);
 
   const getReceivedMessages = () => {
     axios
@@ -35,7 +37,12 @@ const Inbox = () => {
         }
       })
       .then(res => {
-        setReceivedMessages(res.data);
+        setReceivedMessages(
+          res.data.sort((a, b) =>
+            b.timeSent > a.timeSent ? 1 : b.timeSent === a.timeSent ? 1 : -1
+          )
+        );
+        setLoaded(true);
       })
       .catch(err => {
         console.log(err.response);
@@ -51,7 +58,12 @@ const Inbox = () => {
         }
       })
       .then(res => {
-        setSentMessages(res.data);
+        setSentMessages(
+          res.data.sort((a, b) =>
+            b.timeSent > a.timeSent ? 1 : b.timeSent === a.timeSent ? 1 : -1
+          )
+        );
+        setLoaded(true);
       })
       .catch(err => {
         console.log(err.response);
@@ -73,7 +85,7 @@ const Inbox = () => {
   }
 
   return (
-    <div className="inbox">
+    <div style={{ marginTop: "6rem" }}>
       <Dialog
         open={open}
         onClose={handleClose}
@@ -92,21 +104,30 @@ const Inbox = () => {
           </Button>
         </DialogActions>
       </Dialog>
-      {receivedMessages.length === 0 && (
+      {loaded === false && (
         <div className="loading-messages">
           <p>Loading Messages...</p>
           <LinearProgress />
         </div>
       )}
-
-      <p>Inbox/Sent Messages</p>
-      <Switch
-        onChange={e => {
-          e.preventDefault();
-          sentView === false ? setSentView(true) : setSentView(false);
-        }}
-        color="default"
-      />
+      <FormGroup row="true">
+        <p>Inbox</p>
+        <Switch
+          onChange={e => {
+            e.preventDefault();
+            setLoaded(false);
+            if (sentView === false) {
+              setSentView(true);
+              setLoaded(true);
+            } else {
+              setSentView(false);
+              setLoaded(true);
+            }
+          }}
+          color="default"
+        />
+        <p>Sent Messages</p>
+      </FormGroup>
       <div className="message-table">
         <Paper>
           <Table>
@@ -114,19 +135,29 @@ const Inbox = () => {
               <TableRow>
                 <TableCell>Read</TableCell>
                 <TableCell>Date</TableCell>
-                <TableCell>{sentView === true ? "To" : "False"}</TableCell>
+                <TableCell>{sentView === true ? "To" : "From"}</TableCell>
                 <TableCell>Subject/Title</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              {receivedMessages.length === 0 && sentMessages.length === 0
-                ? "Loading"
+              {loaded === false
+                ? "Loading..."
                 : sentView === false
                 ? receivedMessages.map((message, index) => (
-                    <Message message={message} key={index} index={index} />
+                    <Message
+                      message={message}
+                      key={index}
+                      index={index}
+                      history={props.history}
+                    />
                   ))
                 : sentMessages.map((message, index) => (
-                    <Message message={message} key={index} index={index} />
+                    <Message
+                      message={message}
+                      key={index}
+                      index={index}
+                      history={props.history}
+                    />
                   ))}
             </TableBody>
           </Table>
