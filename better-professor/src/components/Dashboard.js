@@ -146,7 +146,6 @@ const Dashboard = props => {
 
   useEffect(() => {
     setUserType();
-    getStudents();
     getUserId();
   }, []);
 
