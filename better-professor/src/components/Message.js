@@ -79,7 +79,7 @@ function Message(props) {
       )
       .then(res => {
         console.log(res.data);
-        alert("SUCCESS");
+        alert("Read Message");
       })
       .catch(err => {
         console.log(err.response);

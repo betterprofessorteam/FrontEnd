@@ -18,7 +18,8 @@ import {
   DialogContent,
   DialogContentText,
   DialogActions,
-  Switch
+  Switch,
+  FormGroup
 } from "@material-ui/core";
 
 const Inbox = () => {
@@ -101,22 +102,24 @@ const Inbox = () => {
           <LinearProgress />
         </div>
       )}
-
-      <p>Inbox/Sent Messages</p>
-      <Switch
-        onChange={e => {
-          e.preventDefault();
-          setLoaded(false);
-          if (sentView === false) {
-            setSentView(true);
-            setLoaded(true);
-          } else {
-            setSentView(false);
-            setLoaded(true);
-          }
-        }}
-        color="default"
-      />
+      <FormGroup row="true">
+        <p>Inbox</p>
+        <Switch
+          onChange={e => {
+            e.preventDefault();
+            setLoaded(false);
+            if (sentView === false) {
+              setSentView(true);
+              setLoaded(true);
+            } else {
+              setSentView(false);
+              setLoaded(true);
+            }
+          }}
+          color="default"
+        />
+        <p>Sent Messages</p>
+      </FormGroup>
       <div className="message-table">
         <Paper>
           <Table>

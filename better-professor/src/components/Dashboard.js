@@ -14,6 +14,8 @@ import InboxIcon from "@material-ui/icons/MoveToInbox";
 import SearchIcon from "@material-ui/icons/Search";
 import SendIcon from "@material-ui/icons/Send";
 import CalendarIcon from "@material-ui/icons/CalendarToday";
+import MenuIcon from "@material-ui/icons/Menu";
+import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 import {
   Container,
   Button,
@@ -26,7 +28,10 @@ import {
   DialogContent,
   DialogContentText,
   DialogActions,
-  Drawer
+  IconButton,
+  AppBar,
+  Toolbar,
+  Typography
 } from "@material-ui/core";
 
 const StyledMenu = withStyles({
@@ -73,14 +78,10 @@ const Dashboard = props => {
   const [state, dispatch] = useStateValue(stateContext);
 
   const classes = useStyles();
-  const [drawer, setDrawer] = useState({
-    top: false,
-    left: false,
-    bottom: false,
-    right: false
-  });
+
   const [open, setOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
+  const openMenu = Boolean(anchorEl);
 
   const getUserId = () => {
     axios
@@ -149,52 +150,6 @@ const Dashboard = props => {
     getUserId();
   }, []);
 
-  // type DrawerSide = 'top' | 'left' | 'bottom' | 'right';
-  // const toggleDrawer = (side: DrawerSide, open: boolean) => (
-  //   event: React.KeyboardEvent | React.MouseEvent,
-  // ) => {
-  //   if (
-  //     event.type === 'keydown' &&
-  //     ((event as React.KeyboardEvent).key === 'Tab' ||
-  //       (event as React.KeyboardEvent).key === 'Shift')
-  //   ) {
-  //     return;
-  //   }
-
-  //   setDrawer({ ...drawer, [side]: open });
-  // };
-
-  // const sideList = (side: DrawerSide) => (
-  //   <div
-  //     className={classes.list}
-  //     role="presentation"
-  //     onClick={toggleDrawer(side, false)}
-  //     onKeyDown={toggleDrawer(side, false)}
-  //   >
-  //     <List>
-  //       {["Inbox", "Starred", "Send email", "Drafts"].map((text, index) => (
-  //         <ListItem button key={text}>
-  //           <ListItemIcon>
-  //             {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-  //           </ListItemIcon>
-  //           <ListItemText primary={text} />
-  //         </ListItem>
-  //       ))}
-  //     </List>
-  //     <Divider />
-  //     <List>
-  //       {["All mail", "Trash", "Spam"].map((text, index) => (
-  //         <ListItem button key={text}>
-  //           <ListItemIcon>
-  //             {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-  //           </ListItemIcon>
-  //           <ListItemText primary={text} />
-  //         </ListItem>
-  //       ))}
-  //     </List>
-  //   </div>
-  // );
-
   function handleClick(event) {
     setAnchorEl(event.currentTarget);
   }
@@ -210,6 +165,15 @@ const Dashboard = props => {
   function handleClose() {
     setOpen(false);
     props.history.push("/login");
+  }
+
+  function profileClick() {
+    props.history.push("/my-bp/profile");
+  }
+
+  function searchStudents() {
+    handleMenuClose();
+    props.history.push("/my-bp/students");
   }
 
   return (
@@ -233,21 +197,58 @@ const Dashboard = props => {
           </Button>
         </DialogActions>
       </Dialog>
-      <Button
-        onClick={() => {
-          localStorage.clear();
-          props.history.push("/login");
-        }}
-      >
-        Log Out
-      </Button>
 
-      {/* <Button onClick={toggleDrawer("left", true)}>Open</Button>
-      <Drawer open={drawer.left} onClose={toggleDrawer("left", false)}>
-        {sideList("left")}
-      </Drawer> */}
+      <AppBar>
+        <Toolbar>
+          <IconButton
+            aria-haspopup="true"
+            color="inherit"
+            onClick={handleClick}
+            edge="start"
+          >
+            <MenuIcon />
+          </IconButton>
+          <Menu
+            anchorEl={anchorEl}
+            anchorOrigin={{
+              vertical: "top",
+              horizontal: "right"
+            }}
+            keepMounted
+            transformOrigin={{
+              vertical: "top",
+              horizontal: "right"
+            }}
+            open={openMenu}
+            onClose={handleMenuClose}
+          >
+            <MenuItem onClick={searchStudents}>Search Students</MenuItem>
+            <MenuItem>My Students</MenuItem>
+            <MenuItem>My Schedule</MenuItem>
+            <MenuItem>Inbox</MenuItem>
+            <MenuItem>Trackers</MenuItem>
+          </Menu>
+          <Typography variant="h6">Menu</Typography>
+          <Button
+            onClick={() => {
+              localStorage.clear();
+              props.history.push("/login");
+            }}
+          >
+            Log Out
+          </Button>
+          <IconButton
+            edge="end"
+            aria-haspopup="true"
+            color="inherit"
+            onClick={profileClick}
+          >
+            <AccountCircleIcon />
+          </IconButton>
+        </Toolbar>
+      </AppBar>
 
-      <Button
+      {/* <Button
         aria-controls="customized-menu"
         aria-haspopup="true"
         variant="contained"
@@ -264,12 +265,16 @@ const Dashboard = props => {
         onClose={handleMenuClose}
       >
         <StyledMenuItem>
-          <ListItemIcon>
-            <SearchIcon />
-          </ListItemIcon>
-          <Link to="/my-bp/students">
-            <ListItemText primary="Search Students" />
-          </Link>
+          {state.userType === "mentor" && (
+            <>
+              <ListItemIcon>
+                <SearchIcon />
+              </ListItemIcon>
+              <Link to="/my-bp/students">
+                <ListItemText primary="Search Students" />
+              </Link>
+            </>
+          )}
           <ListItemIcon>
             <CalendarIcon />
           </ListItemIcon>
@@ -289,7 +294,7 @@ const Dashboard = props => {
             <ListItemText primary="Send Message" />
           </Link>
         </StyledMenuItem>
-      </StyledMenu>
+      </StyledMenu> */}
     </Container>
   );
 };

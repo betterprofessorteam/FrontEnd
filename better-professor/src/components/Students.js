@@ -87,55 +87,61 @@ const Students = props => {
           </Button>
         </DialogActions>
       </Dialog>
-      <TextField
-        placeholder="Search"
-        variant="outlined"
-        value={searchText}
-        onChange={e => setSearchText(e.target.value)}
-        InputProps={{
-          startAdornment: (
-            <InputAdornment position="start">
-              <SearchIcon />
-            </InputAdornment>
-          )
-        }}
-      />
-      <Paper>
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell>Name</TableCell>
-              <TableCell>Email</TableCell>
-              <TableCell>Username</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {searchText.length > 0
-              ? students
-                  .filter(student => {
-                    const lc = student.studentData.lastName.toLowerCase();
-                    const filter = searchText.toLowerCase();
-                    return lc.includes(filter);
-                  })
-                  .map((student, index) => (
+      <div style={{ marginTop: "5rem" }}>
+        <TextField
+          placeholder="Search"
+          variant="outlined"
+          value={searchText}
+          onChange={e => setSearchText(e.target.value)}
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">
+                <SearchIcon />
+              </InputAdornment>
+            )
+          }}
+        />
+        <Paper>
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell>Name</TableCell>
+                <TableCell>Email</TableCell>
+                <TableCell>Username</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {searchText.length > 0
+                ? students
+                    .filter(student => {
+                      const lclast = student.studentData.lastName.toLowerCase();
+                      const lcfirst = student.studentData.firstName.toLowerCase();
+
+                      const filter = searchText.toLowerCase();
+                      return (
+                        lclast.includes(filter) || lcfirst.includes(filter)
+                      );
+                    })
+                    .map((student, index) => (
+                      <Student
+                        student={student}
+                        index={index}
+                        key={index}
+                        history={props.history}
+                      />
+                    ))
+                : students.map((student, index) => (
                     <Student
                       student={student}
                       index={index}
                       key={index}
                       history={props.history}
                     />
-                  ))
-              : students.map((student, index) => (
-                  <Student
-                    student={student}
-                    index={index}
-                    key={index}
-                    history={props.history}
-                  />
-                ))}
-          </TableBody>
-        </Table>
-      </Paper>
+                  ))}
+            </TableBody>
+          </Table>
+        </Paper>
+      </div>
     </Container>
   );
 };
