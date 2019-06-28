@@ -83,6 +83,7 @@ const StudentProfile = props => {
       )
       .then(res => {
         console.log("RESPONSE: ", res);
+        window.location.reload();
       })
       .catch(err => {
         console.log("ERROR: ", err.response);
@@ -152,10 +153,8 @@ const StudentProfile = props => {
 
       {!isAdded ? (
         <Button
-          onClick={e => {
-            e.preventDefault();
+          onClick={() => {
             addStudent();
-            window.location.reload();
           }}
         >
           <AddCircleIcon />
