@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { stateContext, ADD_STUDENT_FAIL } from "../store";
 import { useStateValue } from "react-conflux";
+import moment from "moment";
 import {
   LinearProgress,
   Container,
@@ -86,7 +87,7 @@ const StudentProfile = props => {
   };
 
   return (
-    <Container>
+    <div style={{ marginTop: "5rem" }}>
       <h1 style={{ fontSize: "3rem", marginBottom: "1rem" }}>
         {student.studentData.firstName} {student.studentData.lastName}
       </h1>
@@ -112,7 +113,7 @@ const StudentProfile = props => {
             <TableRow>
               <TableCell>Title</TableCell>
               <TableCell>Due Date</TableCell>
-              <TableCell>Tracker</TableCell>
+              {/* <TableCell>Tracker</TableCell> */}
             </TableRow>
           </TableHead>
           <TableBody>
@@ -121,6 +122,9 @@ const StudentProfile = props => {
                 <>
                   <TableRow>
                     <TableCell>{project.title}</TableCell>
+                    <TableCell>
+                      {moment(project.deadline).format("MMMM Do YYYY")}
+                    </TableCell>
                   </TableRow>
                 </>
               );
@@ -128,7 +132,7 @@ const StudentProfile = props => {
           </TableBody>
         </Table>
       </Paper>
-    </Container>
+    </div>
   );
 };
 

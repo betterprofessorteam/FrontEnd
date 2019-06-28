@@ -15,6 +15,8 @@ import Inbox from "./components/Inbox";
 import SendMessage from "./components/SendMessage";
 import RegisterSuccess from "./components/RegisterSuccess";
 import StudentProfile from "./components/StudentProfile";
+import MyStudents from "./components/MyStudents";
+import Account from "./components/Account";
 
 const App = () => {
   return (
@@ -76,6 +78,18 @@ const App = () => {
         path="/my-bp/students/:id"
         render={props => {
           return <StudentProfile {...props} />;
+        }}
+      />
+      <Route
+        path="/my-bp/my-students"
+        render={props => {
+          return <MyStudents {...props} />;
+        }}
+      />
+      <Route
+        path="/my-bp/account"
+        render={props => {
+          return <Account {...props} />;
         }}
       />
     </StateProvider>

@@ -167,13 +167,23 @@ const Dashboard = props => {
     props.history.push("/login");
   }
 
-  function profileClick() {
-    props.history.push("/my-bp/profile");
-  }
-
-  function searchStudents() {
+  function searchStudentsClick() {
     handleMenuClose();
     props.history.push("/my-bp/students");
+  }
+
+  function myCalendarClick() {
+    handleMenuClose();
+    props.history.push("/my-bp/calendar");
+  }
+  function myStudentsClick() {
+    handleMenuClose();
+    props.history.push("/my-bp/my-students");
+  }
+
+  function accountClick() {
+    handleMenuClose();
+    props.history.push("/my-bp/account");
   }
 
   return (
@@ -222,9 +232,15 @@ const Dashboard = props => {
             open={openMenu}
             onClose={handleMenuClose}
           >
-            <MenuItem onClick={searchStudents}>Search Students</MenuItem>
-            <MenuItem>My Students</MenuItem>
-            <MenuItem>My Schedule</MenuItem>
+            {state.userType === "mentor" && (
+              <div>
+                <MenuItem onClick={searchStudentsClick}>
+                  Search Students
+                </MenuItem>
+                <MenuItem onClick={myStudentsClick}>My Students</MenuItem>
+              </div>
+            )}
+            <MenuItem onClick={myCalendarClick}>My Calendar</MenuItem>
             <MenuItem>Inbox</MenuItem>
             <MenuItem>Trackers</MenuItem>
           </Menu>
@@ -241,7 +257,7 @@ const Dashboard = props => {
             edge="end"
             aria-haspopup="true"
             color="inherit"
-            onClick={profileClick}
+            onClick={accountClick}
           >
             <AccountCircleIcon />
           </IconButton>
