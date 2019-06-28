@@ -70,6 +70,7 @@ function Message(props) {
         `https://better-professor.herokuapp.com/messages/${
           props.message.messageId
         }/read`,
+        null,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`
@@ -78,6 +79,7 @@ function Message(props) {
       )
       .then(res => {
         console.log(res.data);
+        alert("SUCCESS");
       })
       .catch(err => {
         console.log(err.response);
@@ -110,6 +112,7 @@ function Message(props) {
         <TableCell>
           <Button
             onClick={e => {
+              e.preventDefault();
               handleOpen();
             }}
           >
@@ -138,6 +141,7 @@ function Message(props) {
               </Typography>
               <Button
                 onClick={e => {
+                  e.preventDefault();
                   if (
                     props.message.receiverUserId ===
                     localStorage.getItem("userId")

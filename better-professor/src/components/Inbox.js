@@ -26,6 +26,7 @@ const Inbox = () => {
   const [sentMessages, setSentMessages] = useState([]);
   const [open, setOpen] = useState(false);
   const [sentView, setSentView] = useState(false);
+  const [loaded, setLoaded] = useState(false);
 
   const getReceivedMessages = () => {
     axios
@@ -36,6 +37,7 @@ const Inbox = () => {
       })
       .then(res => {
         setReceivedMessages(res.data);
+        setLoaded(true);
       })
       .catch(err => {
         console.log(err.response);
@@ -52,6 +54,7 @@ const Inbox = () => {
       })
       .then(res => {
         setSentMessages(res.data);
+        setLoaded(true);
       })
       .catch(err => {
         console.log(err.response);
@@ -92,7 +95,7 @@ const Inbox = () => {
           </Button>
         </DialogActions>
       </Dialog>
-      {receivedMessages.length === 0 && (
+      {loaded === false && (
         <div className="loading-messages">
           <p>Loading Messages...</p>
           <LinearProgress />
@@ -103,7 +106,14 @@ const Inbox = () => {
       <Switch
         onChange={e => {
           e.preventDefault();
-          sentView === false ? setSentView(true) : setSentView(false);
+          setLoaded(false);
+          if (sentView === false) {
+            setSentView(true);
+            setLoaded(true);
+          } else {
+            setSentView(false);
+            setLoaded(true);
+          }
         }}
         color="default"
       />
@@ -114,12 +124,12 @@ const Inbox = () => {
               <TableRow>
                 <TableCell>Read</TableCell>
                 <TableCell>Date</TableCell>
-                <TableCell>{sentView === true ? "To" : "False"}</TableCell>
+                <TableCell>{sentView === true ? "To" : "From"}</TableCell>
                 <TableCell>Subject/Title</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              {receivedMessages.length === 0 && sentMessages.length === 0
+              {loaded === false
                 ? "Loading"
                 : sentView === false
                 ? receivedMessages.map((message, index) => (

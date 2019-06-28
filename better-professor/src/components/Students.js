@@ -11,7 +11,13 @@ import {
   TableRow,
   Paper,
   TextField,
-  InputAdornment
+  InputAdornment,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogContentText,
+  DialogActions,
+  Button
 } from "@material-ui/core";
 import SearchIcon from "@material-ui/icons/Search";
 
@@ -20,6 +26,7 @@ import Student from "./Student";
 const Students = props => {
   const [state, dispatch] = useStateValue(stateContext);
 
+  const [open, setOpen] = useState(false);
   const [students, setStudents] = useState([]);
   const [searchText, setSearchText] = useState("");
 
@@ -48,11 +55,38 @@ const Students = props => {
           payload: `${err.response.status}
             ${err.response.data.error_description}`
         });
+        handleOpen();
       });
   }, []);
 
+  function handleOpen() {
+    setOpen(true);
+  }
+
+  function handleClose() {
+    setOpen(false);
+  }
+
   return (
     <Container>
+      <Dialog
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">Opps!</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            Something went wrong when loading the students. Please try again.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose} color="primary">
+            Close
+          </Button>
+        </DialogActions>
+      </Dialog>
       <TextField
         placeholder="Search"
         variant="outlined"

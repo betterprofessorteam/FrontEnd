@@ -65,6 +65,7 @@ const StudentProfile = props => {
     axios
       .post(
         `https://better-professor.herokuapp.com/user/mentor/students/${studentId}/add`,
+        null,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`

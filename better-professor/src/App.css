@@ -30,3 +30,9 @@ div {
 .message-table {
   margin-top: 1.5rem;
 }
+
+.register-group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}

@@ -9,7 +9,7 @@ import {
   SET_USER_TYPE
 } from "../store";
 
-import { withStyles } from "@material-ui/core/styles";
+import { withStyles, makeStyles } from "@material-ui/core/styles";
 import InboxIcon from "@material-ui/icons/MoveToInbox";
 import SearchIcon from "@material-ui/icons/Search";
 import SendIcon from "@material-ui/icons/Send";
@@ -20,7 +20,13 @@ import {
   Menu,
   MenuItem,
   ListItemIcon,
-  ListItemText
+  ListItemText,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogContentText,
+  DialogActions,
+  Drawer
 } from "@material-ui/core";
 
 const StyledMenu = withStyles({
@@ -54,8 +60,27 @@ const StyledMenuItem = withStyles(theme => ({
   }
 }))(MenuItem);
 
+const useStyles = makeStyles({
+  list: {
+    width: 250
+  },
+  fullList: {
+    width: "auto"
+  }
+});
+
 const Dashboard = props => {
   const [state, dispatch] = useStateValue(stateContext);
+
+  const classes = useStyles();
+  const [drawer, setDrawer] = useState({
+    top: false,
+    left: false,
+    bottom: false,
+    right: false
+  });
+  const [open, setOpen] = useState(false);
+  const [anchorEl, setAnchorEl] = useState(null);
 
   const getUserId = () => {
     axios
@@ -94,9 +119,7 @@ const Dashboard = props => {
           type: GET_STUDENTS_FAIL,
           payload: err.response.data.error_description
         });
-        alert(
-          "Something went wrong when loading this page. Please try logging in again."
-        );
+        handleOpen();
       });
   };
 
@@ -127,18 +150,90 @@ const Dashboard = props => {
     getUserId();
   }, []);
 
-  const [anchorEl, setAnchorEl] = useState(null);
+  // type DrawerSide = 'top' | 'left' | 'bottom' | 'right';
+  // const toggleDrawer = (side: DrawerSide, open: boolean) => (
+  //   event: React.KeyboardEvent | React.MouseEvent,
+  // ) => {
+  //   if (
+  //     event.type === 'keydown' &&
+  //     ((event as React.KeyboardEvent).key === 'Tab' ||
+  //       (event as React.KeyboardEvent).key === 'Shift')
+  //   ) {
+  //     return;
+  //   }
+
+  //   setDrawer({ ...drawer, [side]: open });
+  // };
+
+  // const sideList = (side: DrawerSide) => (
+  //   <div
+  //     className={classes.list}
+  //     role="presentation"
+  //     onClick={toggleDrawer(side, false)}
+  //     onKeyDown={toggleDrawer(side, false)}
+  //   >
+  //     <List>
+  //       {["Inbox", "Starred", "Send email", "Drafts"].map((text, index) => (
+  //         <ListItem button key={text}>
+  //           <ListItemIcon>
+  //             {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+  //           </ListItemIcon>
+  //           <ListItemText primary={text} />
+  //         </ListItem>
+  //       ))}
+  //     </List>
+  //     <Divider />
+  //     <List>
+  //       {["All mail", "Trash", "Spam"].map((text, index) => (
+  //         <ListItem button key={text}>
+  //           <ListItemIcon>
+  //             {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+  //           </ListItemIcon>
+  //           <ListItemText primary={text} />
+  //         </ListItem>
+  //       ))}
+  //     </List>
+  //   </div>
+  // );
 
   function handleClick(event) {
     setAnchorEl(event.currentTarget);
   }
 
-  function handleClose() {
+  function handleMenuClose() {
     setAnchorEl(null);
+  }
+
+  function handleOpen() {
+    setOpen(true);
+  }
+
+  function handleClose() {
+    setOpen(false);
+    props.history.push("/login");
   }
 
   return (
     <Container>
+      <Dialog
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">Opps!</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            Something went wrong when loading the page. Please try logging in
+            again.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose} color="primary">
+            Close
+          </Button>
+        </DialogActions>
+      </Dialog>
       <Button
         onClick={() => {
           localStorage.clear();
@@ -147,6 +242,12 @@ const Dashboard = props => {
       >
         Log Out
       </Button>
+
+      {/* <Button onClick={toggleDrawer("left", true)}>Open</Button>
+      <Drawer open={drawer.left} onClose={toggleDrawer("left", false)}>
+        {sideList("left")}
+      </Drawer> */}
+
       <Button
         aria-controls="customized-menu"
         aria-haspopup="true"
@@ -161,7 +262,7 @@ const Dashboard = props => {
         anchorEl={anchorEl}
         keepMounted
         open={Boolean(anchorEl)}
-        onClose={handleClose}
+        onClose={handleMenuClose}
       >
         <StyledMenuItem>
           <ListItemIcon>
