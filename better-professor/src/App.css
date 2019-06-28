@@ -36,3 +36,7 @@ div {
   flex-direction: column;
   align-items: center;
 }
+
+.react-calendar__tile {
+  height: 3.2rem;
+}
