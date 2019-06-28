@@ -31,6 +31,7 @@ const SendMessage = props => {
       })
       .then(res => {
         console.log("RES.DATA", res.data);
+        props.history.push("/my-bp/inbox");
       })
       .catch(err => {
         console.log(err.response);
@@ -55,7 +56,7 @@ const SendMessage = props => {
       >
         <div style={{ display: "flex" }}>
           <div
-            style={{ marginLeft: "1rem", marginRight: "2rem", width: "6rem" }}
+            style={{ marginLeft: "1rem", marginRight: "6rem", width: "6rem" }}
           >
             <InputLabel>Send To</InputLabel>
             <Select
