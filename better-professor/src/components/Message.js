@@ -139,18 +139,18 @@ function Message(props) {
               <Typography variant="subtitle1" id="modal-description">
                 {props.message.text}
               </Typography>
-              {props.message.receiverUserId ==
-                localStorage.getItem("userId") && (
-                <Button
-                  onClick={e => {
-                    e.preventDefault();
+              {props.message.receiverUserId == localStorage.getItem("userId") &&
+                props.message.timeRead == 0 && (
+                  <Button
+                    onClick={e => {
+                      e.preventDefault();
 
-                    markAsRead();
-                  }}
-                >
-                  Mark as Read
-                </Button>
-              )}
+                      markAsRead();
+                    }}
+                  >
+                    Mark as Read
+                  </Button>
+                )}
             </div>
           </Modal>
         </TableCell>
