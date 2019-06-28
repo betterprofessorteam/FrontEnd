@@ -59,7 +59,7 @@ const Account = props => {
   };
 
   return (
-    <div style={{ marginTop: "5rem" }}>
+    <div style={{ marginTop: "6rem" }}>
       <Dialog
         open={open}
         onClose={handleClose}
@@ -77,37 +77,27 @@ const Account = props => {
           <Button onClick={handleClose} color="primary">
             Nevermind
           </Button>
-          <Button onClick={deleteAccount} color="primary">
+          <Button onClick={deleteAccount} color="secondary">
             Delete Account
           </Button>
         </DialogActions>
       </Dialog>
-      <h1>Account Information</h1>
-
-      {/* {accountInfo.mentorData ? (
-        <h1>
-          Name:
-          {`${accountInfo.mentorData.firstName} ${
-            accountInfo.mentorData.lastName
-          }`}
-        </h1>
-      ) : (
-        <h1>
-          Name:
-          {`${accountInfo.studentData.firstName} ${
-            accountInfo.studentData.lastName
-          }`}
-        </h1>
-      )} */}
+      <h1 style={{ fontSize: "2rem" }}>Account Information</h1>
+      <h1 style={{ fontSize: "1.7rem" }}>{`Name: ${localStorage.getItem(
+        "firstName"
+      )} ${localStorage.getItem("lastName")}`}</h1>
+      <h1 style={{ fontSize: "1.5rem" }}>{localStorage.getItem("userType")}</h1>
       {accountInfo !== null && (
         <>
-          <h1 style={{ fontSize: "1.5rem" }}>
+          <h1 style={{ fontSize: "1.2rem" }}>
             Username: {accountInfo.username}
           </h1>
-          <h1 style={{ fontSize: "1.5rem" }}>Email: {accountInfo.email}</h1>
+          <h1 style={{ fontSize: "1.2rem" }}>Email: {accountInfo.email}</h1>
         </>
       )}
-      <Button onClick={handleOpen}>Delete Account</Button>
+      <Button color="secondary" onClick={handleOpen}>
+        Delete Account
+      </Button>
     </div>
   );
 };

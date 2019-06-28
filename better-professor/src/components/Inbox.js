@@ -37,7 +37,11 @@ const Inbox = props => {
         }
       })
       .then(res => {
-        setReceivedMessages(res.data);
+        setReceivedMessages(
+          res.data.sort((a, b) =>
+            b.timeSent > a.timeSent ? 1 : b.timeSent === a.timeSent ? 1 : -1
+          )
+        );
         setLoaded(true);
       })
       .catch(err => {
@@ -54,7 +58,11 @@ const Inbox = props => {
         }
       })
       .then(res => {
-        setSentMessages(res.data);
+        setSentMessages(
+          res.data.sort((a, b) =>
+            b.timeSent > a.timeSent ? 1 : b.timeSent === a.timeSent ? 1 : -1
+          )
+        );
         setLoaded(true);
       })
       .catch(err => {
@@ -77,7 +85,7 @@ const Inbox = props => {
   }
 
   return (
-    <div style={{ marginTop: "5rem" }}>
+    <div style={{ marginTop: "6rem" }}>
       <Dialog
         open={open}
         onClose={handleClose}

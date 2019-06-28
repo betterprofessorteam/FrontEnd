@@ -60,7 +60,7 @@ const MyStudents = props => {
   }
 
   return (
-    <div style={{ marginTop: "5rem" }}>
+    <div style={{ marginTop: "6rem" }}>
       <Dialog
         open={open}
         onClose={handleClose}
@@ -79,7 +79,7 @@ const MyStudents = props => {
           </Button>
         </DialogActions>
       </Dialog>
-      <h1>My Students</h1>
+      <h1 style={{ fontSize: "2rem" }}>My Students</h1>
       <Paper>
         <Table>
           <TableHead>

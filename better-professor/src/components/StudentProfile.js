@@ -107,7 +107,7 @@ const StudentProfile = props => {
       )
       .then(res => {
         console.log("RESPONSE: ", res);
-        props.history.push("/my-bp/my-students");
+        window.location.reload();
       })
       .catch(err => {
         console.log("ERROR: ", err.response);
@@ -123,7 +123,7 @@ const StudentProfile = props => {
   }
 
   return (
-    <div style={{ marginTop: "5rem" }}>
+    <div style={{ marginTop: "6rem" }}>
       <Dialog
         open={open}
         onClose={handleClose}
@@ -141,7 +141,7 @@ const StudentProfile = props => {
           <Button onClick={handleClose} color="primary">
             Nevermind
           </Button>
-          <Button onClick={removeStudent} color="primary">
+          <Button onClick={removeStudent} color="secondary">
             Yes, Remove Student
           </Button>
         </DialogActions>
@@ -155,6 +155,7 @@ const StudentProfile = props => {
           onClick={e => {
             e.preventDefault();
             addStudent();
+            window.location.reload();
           }}
         >
           <AddCircleIcon />
@@ -162,6 +163,7 @@ const StudentProfile = props => {
         </Button>
       ) : (
         <Button
+          color="secondary"
           onClick={e => {
             e.preventDefault();
             handleOpen();

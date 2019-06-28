@@ -87,7 +87,7 @@ const Students = props => {
           </Button>
         </DialogActions>
       </Dialog>
-      <div style={{ marginTop: "5rem" }}>
+      <div style={{ marginTop: "6rem" }}>
         <TextField
           placeholder="Search"
           variant="outlined"

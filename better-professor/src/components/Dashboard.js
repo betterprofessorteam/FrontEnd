@@ -202,6 +202,11 @@ const Dashboard = props => {
     props.history.push("/my-bp/inbox");
   }
 
+  function dashClick() {
+    handleMenuClose();
+    props.history.push("/my-bp/dash");
+  }
+
   return (
     <Container>
       <Dialog
@@ -248,6 +253,8 @@ const Dashboard = props => {
             open={openMenu}
             onClose={handleMenuClose}
           >
+            <MenuItem onClick={dashClick}>Upcoming Deadlines</MenuItem>
+
             {state.userType === "mentor" && (
               <div>
                 <MenuItem onClick={searchStudentsClick}>
