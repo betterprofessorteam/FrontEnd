@@ -11,9 +11,11 @@
     "react-calendar": "^2.19.0",
     "react-conflux": "^0.0.2-beta.6",
     "react-dom": "^16.8.6",
+    "react-jss": "^8.6.1",
     "react-router": "^5.0.1",
     "react-router-dom": "^5.0.1",
-    "react-scripts": "3.0.1"
+    "react-scripts": "3.0.1",
+    "styled-components": "^4.3.2"
   },
   "scripts": {
     "start": "react-scripts start",

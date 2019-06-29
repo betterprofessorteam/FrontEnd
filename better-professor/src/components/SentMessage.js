@@ -28,22 +28,21 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-const Message = props => {
-  const [senderName, setSenderName] = useState("");
-
+const SentMessage = props => {
+  const [receiverName, setReceiverName] = useState("");
   const [open, setOpen] = useState(false);
 
   const classes = useStyles();
 
   useEffect(() => {
-    getSenderName();
+    getReceiverName();
   }, []);
 
-  const getSenderName = () => {
+  const getReceiverName = () => {
     axios
       .get(
         `https://better-professor.herokuapp.com/users/${
-          props.message.senderUserId
+          props.message.receiverUserId
         }`,
         {
           headers: {
@@ -53,18 +52,20 @@ const Message = props => {
       )
       .then(res => {
         if (res.data.mentorData) {
-          setSenderName(
+          console.log(res.data.mentorData);
+          setReceiverName(
             `${res.data.mentorData.firstName} ${res.data.mentorData.lastName}`
           );
         } else {
-          setSenderName(
+          console.log(res.data.studentData);
+          setReceiverName(
             `${res.data.studentData.firstName} ${res.data.studentData.lastName}`
           );
         }
       })
       .catch(err => {
-        console.log("SENDER NAME ERROR: ", err.response);
-        alert("Something went wrong loading your messages. Please try again.");
+        console.log("RECEIVER NAME ERROR: ", err.response);
+        // alert("Something went wrong loading your messages. Please try again.");
       });
   };
 
@@ -112,7 +113,7 @@ const Message = props => {
         <TableCell>
           {moment(props.message.timeSent).format("MMMM Do YYYY")}
         </TableCell>
-        <TableCell>{senderName}</TableCell>
+        <TableCell>{receiverName}</TableCell>
         <TableCell>
           <Button
             onClick={e => {
@@ -143,17 +144,6 @@ const Message = props => {
               <Typography variant="subtitle1" id="modal-description">
                 {props.message.text}
               </Typography>
-              {props.message.timeRead == 0 && (
-                <Button
-                  onClick={e => {
-                    e.preventDefault();
-
-                    markAsRead();
-                  }}
-                >
-                  Mark as Read
-                </Button>
-              )}
             </div>
           </Modal>
         </TableCell>
@@ -161,4 +151,4 @@ const Message = props => {
     </>
   );
 };
-export default Message;
+export default SentMessage;
