@@ -79,7 +79,7 @@ const Register = props => {
           }
         }}
       >
-        <StyledTextField
+        <TextField
           fullWidth="true"
           type="text"
           placeholder="First Name"
