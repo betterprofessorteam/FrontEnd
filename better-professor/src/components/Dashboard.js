@@ -1,19 +1,14 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
 import { useStateValue } from "react-conflux";
 import axios from "axios";
 import {
   stateContext,
   GET_STUDENTS_SUCCESS,
-  GET_STUDENTS_FAIL,
-  SET_USER_TYPE
+  GET_STUDENTS_FAIL
 } from "../store";
 
-import { withStyles, makeStyles } from "@material-ui/core/styles";
-import InboxIcon from "@material-ui/icons/MoveToInbox";
-import SearchIcon from "@material-ui/icons/Search";
-import SendIcon from "@material-ui/icons/Send";
-import CalendarIcon from "@material-ui/icons/CalendarToday";
+import { withStyles } from "@material-ui/core/styles";
+
 import MenuIcon from "@material-ui/icons/Menu";
 import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 import {
@@ -21,8 +16,6 @@ import {
   Button,
   Menu,
   MenuItem,
-  ListItemIcon,
-  ListItemText,
   Dialog,
   DialogTitle,
   DialogContent,
@@ -34,73 +27,74 @@ import {
   Typography
 } from "@material-ui/core";
 
-const StyledMenu = withStyles({
-  paper: {
-    border: "1px solid #d3d4d5"
-  }
-})(props => (
-  <Menu
-    elevation={0}
-    getContentAnchorEl={null}
-    anchorOrigin={{
-      vertical: "bottom",
-      horizontal: "center"
-    }}
-    transformOrigin={{
-      vertical: "top",
-      horizontal: "center"
-    }}
-    {...props}
-  />
-));
+// const StyledMenu = withStyles({
+//   paper: {
+//     border: "1px solid #d3d4d5"
+//   }
+// })(props => (
+//   <Menu
+//     elevation={0}
+//     getContentAnchorEl={null}
+//     anchorOrigin={{
+//       vertical: "bottom",
+//       horizontal: "center"
+//     }}
+//     transformOrigin={{
+//       vertical: "top",
+//       horizontal: "center"
+//     }}
+//     {...props}
+//   />
+// ));
 
-const StyledMenuItem = withStyles(theme => ({
-  root: {
-    "&:focus": {
-      backgroundColor: theme.palette.primary.main,
-      "& .MuiListItemIcon-root, & .MuiListItemText-primary": {
-        color: theme.palette.common.white
-      }
-    }
-  }
-}))(MenuItem);
+// const StyledMenuItem = withStyles(theme => ({
+//   root: {
+//     "&:focus": {
+//       backgroundColor: theme.palette.primary.main,
+//       "& .MuiListItemIcon-root, & .MuiListItemText-primary": {
+//         color: theme.palette.common.white
+//       }
+//     }
+//   }
+// }))(MenuItem);
 
-const useStyles = makeStyles({
-  list: {
-    width: 250
-  },
-  fullList: {
-    width: "auto"
-  }
-});
+// const useStyles = makeStyles({
+//   list: {
+//     width: 250
+//   },
+//   fullList: {
+//     width: "auto"
+//   }
+// });
 
 const Dashboard = props => {
   const [state, dispatch] = useStateValue(stateContext);
 
-  const classes = useStyles();
+  // const classes = useStyles();
 
   const [open, setOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
   const openMenu = Boolean(anchorEl);
 
-  const getUserId = () => {
-    axios
-      .get("https://better-professor.herokuapp.com/user", {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`
-        }
-      })
-      .then(res => {
-        console.log(res.data);
-        localStorage.setItem("userId", res.data.userId);
-      })
-      .catch(err => {
-        console.log(err.response);
-        alert(
-          "Sorry, something seems to have went wrong. Please try logging in again."
-        );
-      });
-  };
+  // const getUserId = () => {
+  //   axios
+  //     .get("https://better-professor.herokuapp.com/user", {
+  //       headers: {
+  //         Authorization: `Bearer ${localStorage.getItem("token")}`
+  //       }
+  //     })
+  //     .then(res => {
+  //       console.log(res.data);
+  //       localStorage.setItem("userId", res.data.userId);
+
+  //     })
+  //     .catch(err => {
+  //       console.log(err.response);
+  //       alert(
+  //         "Sorry, something seems to have went wrong. Please try logging in again."
+  //       );
+  //     });
+  // };
 
   const getStudents = () => {
     axios
@@ -123,7 +117,7 @@ const Dashboard = props => {
       });
   };
 
-  const setUserType = () => {
+  const getUserInfo = () => {
     axios
       .get("https://better-professor.herokuapp.com/user", {
         headers: {
@@ -132,15 +126,13 @@ const Dashboard = props => {
       })
       .then(res => {
         console.log("USER INFO RES.DATA", res.data);
+        localStorage.setItem("userId", res.data.userId);
         if (Object.keys(res.data).includes("mentorData")) {
-          dispatch({ type: SET_USER_TYPE, payload: "mentor" });
           localStorage.setItem("userType", "mentor");
           localStorage.setItem("firstName", res.data.mentorData.firstName);
           localStorage.setItem("lastName", res.data.mentorData.lastName);
-
           getStudents();
         } else {
-          dispatch({ type: SET_USER_TYPE, payload: "student" });
           localStorage.setItem("userType", "student");
           localStorage.setItem("firstName", res.data.studentData.firstName);
           localStorage.setItem("lastName", res.data.studentData.lastName);
@@ -152,8 +144,8 @@ const Dashboard = props => {
   };
 
   useEffect(() => {
-    setUserType();
-    getUserId();
+    // setUserType();
+    getUserInfo();
   }, []);
 
   function handleClick(event) {
@@ -255,7 +247,7 @@ const Dashboard = props => {
           >
             <MenuItem onClick={dashClick}>Upcoming Deadlines</MenuItem>
 
-            {state.userType === "mentor" && (
+            {localStorage.getItem("userType") === "mentor" && (
               <div>
                 <MenuItem onClick={searchStudentsClick}>
                   Search Students

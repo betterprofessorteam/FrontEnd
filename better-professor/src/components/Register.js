@@ -10,6 +10,18 @@ import {
   TextField,
   Container
 } from "@material-ui/core";
+import styled from "styled-components";
+
+const StyledTextField = styled(TextField)`
+  .MuiOutlinedInput-root {
+    fieldset {
+      border-color: orange;
+    }
+  }
+  .PrivateNotchedOutline-root-45 {
+    margin-top: 1rem;
+  }
+`;
 
 const Register = props => {
   const [state, dispatch] = useStateValue(stateContext);

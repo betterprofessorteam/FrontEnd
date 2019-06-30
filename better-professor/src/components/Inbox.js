@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import Message from "./Message";
+import SentMessage from "./SentMessage";
 import {
   Container,
   Button,
@@ -28,6 +29,11 @@ const Inbox = props => {
   const [open, setOpen] = useState(false);
   const [sentView, setSentView] = useState(false);
   const [loaded, setLoaded] = useState(false);
+
+  useEffect(() => {
+    getReceivedMessages();
+    getSentMessages();
+  }, []);
 
   const getReceivedMessages = () => {
     axios
@@ -70,11 +76,6 @@ const Inbox = props => {
         handleOpen();
       });
   };
-
-  useEffect(() => {
-    getReceivedMessages();
-    getSentMessages();
-  }, []);
 
   function handleOpen() {
     setOpen(true);
@@ -143,20 +144,18 @@ const Inbox = props => {
               {loaded === false
                 ? "Loading..."
                 : sentView === false
-                ? receivedMessages.map((message, index) => (
+                ? receivedMessages.map(message => (
                     <Message
                       message={message}
-                      key={index}
-                      index={index}
                       history={props.history}
+                      sentView={false}
                     />
                   ))
-                : sentMessages.map((message, index) => (
-                    <Message
+                : sentMessages.map(message => (
+                    <SentMessage
                       message={message}
-                      key={index}
-                      index={index}
                       history={props.history}
+                      sentView={true}
                     />
                   ))}
             </TableBody>
