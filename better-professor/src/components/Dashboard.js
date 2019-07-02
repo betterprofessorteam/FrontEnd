@@ -27,74 +27,12 @@ import {
   Typography
 } from "@material-ui/core";
 
-// const StyledMenu = withStyles({
-//   paper: {
-//     border: "1px solid #d3d4d5"
-//   }
-// })(props => (
-//   <Menu
-//     elevation={0}
-//     getContentAnchorEl={null}
-//     anchorOrigin={{
-//       vertical: "bottom",
-//       horizontal: "center"
-//     }}
-//     transformOrigin={{
-//       vertical: "top",
-//       horizontal: "center"
-//     }}
-//     {...props}
-//   />
-// ));
-
-// const StyledMenuItem = withStyles(theme => ({
-//   root: {
-//     "&:focus": {
-//       backgroundColor: theme.palette.primary.main,
-//       "& .MuiListItemIcon-root, & .MuiListItemText-primary": {
-//         color: theme.palette.common.white
-//       }
-//     }
-//   }
-// }))(MenuItem);
-
-// const useStyles = makeStyles({
-//   list: {
-//     width: 250
-//   },
-//   fullList: {
-//     width: "auto"
-//   }
-// });
-
 const Dashboard = props => {
   const [state, dispatch] = useStateValue(stateContext);
-
-  // const classes = useStyles();
 
   const [open, setOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
   const openMenu = Boolean(anchorEl);
-
-  // const getUserId = () => {
-  //   axios
-  //     .get("https://better-professor.herokuapp.com/user", {
-  //       headers: {
-  //         Authorization: `Bearer ${localStorage.getItem("token")}`
-  //       }
-  //     })
-  //     .then(res => {
-  //       console.log(res.data);
-  //       localStorage.setItem("userId", res.data.userId);
-
-  //     })
-  //     .catch(err => {
-  //       console.log(err.response);
-  //       alert(
-  //         "Sorry, something seems to have went wrong. Please try logging in again."
-  //       );
-  //     });
-  // };
 
   const getStudents = () => {
     axios
@@ -144,7 +82,6 @@ const Dashboard = props => {
   };
 
   useEffect(() => {
-    // setUserType();
     getUserInfo();
   }, []);
 
@@ -199,6 +136,11 @@ const Dashboard = props => {
     props.history.push("/my-bp/dash");
   }
 
+  function funClick() {
+    handleMenuClose();
+    props.history.push("/my-bp/fun");
+  }
+
   return (
     <Container>
       <Dialog
@@ -245,6 +187,7 @@ const Dashboard = props => {
             open={openMenu}
             onClose={handleMenuClose}
           >
+            <MenuItem onClick={funClick}>Fun</MenuItem>
             <MenuItem onClick={dashClick}>Upcoming Deadlines</MenuItem>
 
             {localStorage.getItem("userType") === "mentor" && (

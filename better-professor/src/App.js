@@ -20,6 +20,8 @@ import MyStudents from "./components/MyStudents";
 import Account from "./components/Account";
 import Dash from "./components/Dash";
 
+import Fun from "./components/Fun";
+
 const App = () => {
   return (
     <StateProvider reducer={reducer} stateContext={stateContext}>
@@ -98,6 +100,12 @@ const App = () => {
         path="/my-bp/dash"
         render={props => {
           return <Dash {...props} />;
+        }}
+      />
+      <Route
+        path="/my-bp/fun"
+        render={props => {
+          return <Fun {...props} />;
         }}
       />
     </StateProvider>
