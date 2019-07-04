@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import moment from "moment";
 import MUIDataTable from "mui-datatables";
+import RadioButtonCheckedIcon from "@material-ui/icons/RadioButtonChecked";
+import RadioButtonUheckedIcon from "@material-ui/icons/RadioButtonUnchecked";
 
 const Fun = props => {
   const receivedColumns = [
@@ -9,8 +11,9 @@ const Fun = props => {
       name: "read",
       label: "Read",
       options: {
-        filter: true,
-        sort: true
+        filter: false,
+        sort: true,
+        download: false
       }
     },
     {
@@ -41,7 +44,9 @@ const Fun = props => {
       name: "id",
       label: "ID",
       options: {
-        display: false
+        display: false,
+        filter: false,
+        download: false
       }
     }
   ];
@@ -51,7 +56,7 @@ const Fun = props => {
       name: "read",
       label: "Read",
       options: {
-        filter: true,
+        filter: false,
         sort: true
       }
     },
@@ -82,8 +87,9 @@ const Fun = props => {
   ];
 
   const [sentView, setSentView] = useState(false);
-
   const [loaded, setLoaded] = useState(false);
+  const [page, setPage] = useState(0);
+  const [size, setSize] = useState(500);
   const [sentMessageData, setSentMessageData] = useState([]);
   const [receivedMessageData, setReceivedMessageData] = useState([]);
 
@@ -93,7 +99,11 @@ const Fun = props => {
 
   const timeRead = messages => {
     return messages.map(message => {
-      return message.timeRead;
+      return message.timeRead === 0 ? (
+        <RadioButtonUheckedIcon />
+      ) : (
+        <RadioButtonCheckedIcon />
+      );
     });
   };
 
@@ -132,6 +142,10 @@ const Fun = props => {
       .get("https://better-professor.herokuapp.com/messages/received", {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`
+        },
+        params: {
+          page: `${page}`,
+          size: `${size}`
         }
       })
       .then(res => {
@@ -170,10 +184,10 @@ const Fun = props => {
         }
       })
       .then(res => {
-        const timesRead = timeRead(res.data.content).map(date => {
+        const timesRead = timeRead(res.data.content);
+        const timesSent = timeSent(res.data.content).map(date => {
           return moment(date).format("MMMM Do YYYY");
         });
-        const timesSent = timeSent(res.data.content);
         const titles = title(res.data.content);
         const receiverNames = receiverName(res.data.content);
         const messageIds = messageId(res.data.content);
@@ -211,6 +225,9 @@ const Fun = props => {
         reset: "RESET FILTERS"
       }
     },
+    viewColumns: false,
+    rowsPerPageOptions: [10, 50, 100],
+    downloadOptions: { filename: "BetterProfessorMessages.csv" },
     onRowsDelete: row => {
       const messageId = receivedMessageData[row.data[0].index][4];
       console.log(messageId);
@@ -225,16 +242,11 @@ const Fun = props => {
         )
         .then(res => {
           console.log(res);
+          window.location.reload();
         })
         .catch(console.error);
       console.log("DELETING: --- ", row);
     },
-    // function(rowsDeleted: object(lookup: {dataindex: boolean}, data: arrayOfObjects: {index, dataIndex})) => false,
-    // rowsPerPageOptions: [20],
-    // downloadOptions: {
-    //   filename: "receivedMessagesDownload.csv",
-    //   separator: ","
-    // },
     onRowClick: function() {
       console.log("im clickingggggg");
     }
@@ -243,9 +255,9 @@ const Fun = props => {
   return (
     <div style={{ marginTop: "6rem" }}>
       <MUIDataTable
-        title={"Inbox"}
-        data={receivedMessageData}
-        columns={receivedColumns}
+        title={sentView === false ? "Inbox" : "Sent Messages"}
+        data={sentView === false ? receivedMessageData : sentMessageData}
+        columns={sentView === false ? receivedColumns : sentColumns}
         options={options}
       />
     </div>
