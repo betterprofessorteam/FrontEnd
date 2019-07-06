@@ -4,6 +4,7 @@ import moment from "moment";
 import MUIDataTable from "mui-datatables";
 import RadioButtonCheckedIcon from "@material-ui/icons/RadioButtonChecked";
 import RadioButtonUheckedIcon from "@material-ui/icons/RadioButtonUnchecked";
+import { LinearProgress, Button, FormGroup, Switch } from "@material-ui/core";
 
 const Fun = props => {
   const receivedColumns = [
@@ -12,7 +13,7 @@ const Fun = props => {
       label: "Read",
       options: {
         filter: false,
-        sort: true,
+        sort: false,
         download: false
       }
     },
@@ -57,7 +58,7 @@ const Fun = props => {
       label: "Read",
       options: {
         filter: false,
-        sort: true
+        sort: false
       }
     },
     {
@@ -88,8 +89,6 @@ const Fun = props => {
 
   const [sentView, setSentView] = useState(false);
   const [loaded, setLoaded] = useState(false);
-  const [page, setPage] = useState(0);
-  const [size, setSize] = useState(500);
   const [sentMessageData, setSentMessageData] = useState([]);
   const [receivedMessageData, setReceivedMessageData] = useState([]);
 
@@ -144,19 +143,19 @@ const Fun = props => {
           Authorization: `Bearer ${localStorage.getItem("token")}`
         },
         params: {
-          page: `${page}`,
-          size: `${size}`
+          size: 500
         }
       })
       .then(res => {
-        const timesRead = timeRead(res.data.content);
+        const data = res.data.content.sort((a, b) => b.timeSent > a.timeSent ? 1 : b.timeSent === a.timeSent ? 1 : -1)
 
-        const timesSent = timeSent(res.data.content).map(date => {
+        const timesRead = timeRead(data);
+        const timesSent = timeSent(data).map(date => {
           return moment(date).format("MMMM Do YYYY h:mm a");
         });
-        const titles = title(res.data.content);
-        const senderNames = senderName(res.data.content);
-        const messageIds = messageId(res.data.content);
+        const titles = title(data);
+        const senderNames = senderName(data);
+        const messageIds = messageId(data);
         const receivedData = [];
         for (let i = 0; i < timesRead.length; i++) {
           receivedData.push([
@@ -181,16 +180,21 @@ const Fun = props => {
       .get("https://better-professor.herokuapp.com/messages/sent", {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`
+        },
+        params: {
+          size: 500
         }
       })
       .then(res => {
-        const timesRead = timeRead(res.data.content);
-        const timesSent = timeSent(res.data.content).map(date => {
+        const data = res.data.content.sort((a, b) => b.timeSent > a.timeSent ? 1 : b.timeSent === a.timeSent ? 1 : -1)
+
+        const timesRead = timeRead(data);
+        const timesSent = timeSent(data).map(date => {
           return moment(date).format("MMMM Do YYYY");
         });
-        const titles = title(res.data.content);
-        const receiverNames = receiverName(res.data.content);
-        const messageIds = messageId(res.data.content);
+        const titles = title(data);
+        const receiverNames = receiverName(data);
+        const messageIds = messageId(data);
         const sentData = [];
         for (let i = 0; i < timesRead.length; i++) {
           sentData.push([
@@ -218,19 +222,15 @@ const Fun = props => {
         print: "Print",
         viewColumns: "View Columns",
         filterTable: "Filter Messages"
-      },
-      filter: {
-        all: "All",
-        title: "FILTERS",
-        reset: "RESET FILTERS"
       }
     },
+    downloadOptions: {filename: "BetterProfessorMessages.csv"},
     viewColumns: false,
+    filter: false,
     rowsPerPageOptions: [10, 50, 100],
     downloadOptions: { filename: "BetterProfessorMessages.csv" },
     onRowsDelete: row => {
       const messageId = receivedMessageData[row.data[0].index][4];
-      console.log(messageId);
       axios
         .delete(
           `https://better-professor.herokuapp.com/messages/${messageId}`,
@@ -241,7 +241,6 @@ const Fun = props => {
           }
         )
         .then(res => {
-          console.log(res);
           window.location.reload();
         })
         .catch(console.error);
@@ -252,14 +251,34 @@ const Fun = props => {
     }
   };
 
+
   return (
     <div style={{ marginTop: "6rem" }}>
-      <MUIDataTable
-        title={sentView === false ? "Inbox" : "Sent Messages"}
-        data={sentView === false ? receivedMessageData : sentMessageData}
-        columns={sentView === false ? receivedColumns : sentColumns}
-        options={options}
-      />
+      {loaded === false ? (<><h1>Loading...</h1><LinearProgress/></>) : 
+     <MUIDataTable
+     title={(<FormGroup row="true">
+     <p>Inbox</p>
+     <Switch
+       onChange={() => {
+         setLoaded(false);
+         if (sentView === false) {
+           setSentView(true);
+           setLoaded(true);
+         } else {
+           setSentView(false);
+           setLoaded(true);
+         }
+       }}
+       color="default"
+     />
+     <p>Sent Messages</p>
+   </FormGroup>)}
+     data={sentView === false ? receivedMessageData : sentMessageData}
+     columns={sentView === false ? receivedColumns : sentColumns}
+     options={options}
+   />
+    }
+     
     </div>
   );
 };
