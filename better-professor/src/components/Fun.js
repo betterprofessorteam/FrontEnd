@@ -3,7 +3,7 @@ import axios from "axios";
 import moment from "moment";
 import MUIDataTable from "mui-datatables";
 import RadioButtonCheckedIcon from "@material-ui/icons/RadioButtonChecked";
-import RadioButtonUheckedIcon from "@material-ui/icons/RadioButtonUnchecked";
+import RadioButtonUncheckedIcon from "@material-ui/icons/RadioButtonUnchecked";
 import { LinearProgress, Button, FormGroup, Switch, Modal, Typography, makeStyles, Theme, createStyles } from "@material-ui/core";
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -104,6 +104,22 @@ const Fun = props => {
         filter: true,
         sort: true
       }
+    },
+    {
+      name: "id",
+      label: "ID",
+      options: {
+        display: false,
+        filter: false,
+        download: false
+      }
+    },
+    {
+      name: "text",
+      label: "Text",
+      options: {
+        display: false
+      }
     }
   ];
 
@@ -112,6 +128,8 @@ const Fun = props => {
   const [sentMessageData, setSentMessageData] = useState([]);
   const [receivedMessageData, setReceivedMessageData] = useState([]);
   const [messageBody, setMessageBody] = useState("");
+  const [id, setId] = useState(0);
+  const [read, setRead] = useState(false);
 
   const [open, setOpen] = useState(false);
 
@@ -123,11 +141,13 @@ const Fun = props => {
 
   const timeRead = messages => {
     return messages.map(message => {
-      return message.timeRead === 0 ? (
-        <RadioButtonUheckedIcon />
-      ) : (
-        <RadioButtonCheckedIcon />
-      );
+      if(message.timeRead === 0) {
+        setRead(false);
+        return (<RadioButtonUncheckedIcon />)
+      } else {
+        setRead(true);
+        return (<RadioButtonCheckedIcon />)
+      }
     });
   };
 
@@ -174,6 +194,29 @@ const Fun = props => {
   const handleClose = () => {
     setOpen(false);
   };
+
+  const markAsRead = () => {
+    axios
+    .post(
+      `https://better-professor.herokuapp.com/messages/${
+        id
+      }/read`,
+      null,
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`
+        }
+      }
+    )
+    .then(res => {
+      console.log(res.data);
+      window.location.reload();
+    })
+    .catch(err => {
+      console.log(err.response);
+      alert("Something went wrong");
+    });
+  }
 
   const getReceivedMessages = () => {
     axios
@@ -236,6 +279,7 @@ const Fun = props => {
         const titles = title(data);
         const receiverNames = receiverName(data);
         const messageIds = messageId(data);
+        const messageTexts = messageText(data);
         const sentData = [];
         for (let i = 0; i < timesRead.length; i++) {
           sentData.push([
@@ -243,7 +287,8 @@ const Fun = props => {
             timesSent[i],
             receiverNames[i],
             titles[i],
-            messageIds[i]
+            messageIds[i],
+            messageTexts[i]
           ]);
         }
         setSentMessageData(sentData);
@@ -290,11 +335,8 @@ const Fun = props => {
     onRowClick: row => {
       handleOpen();
       setMessageBody(row[5]);
-      console.log(row[5])
+      setId(row[4]);
     }
-    // function() {
-    //   console.log("im clickingggggg");
-    // }
   };
 
 
@@ -335,6 +377,10 @@ const Fun = props => {
        <Typography variant="subtitle1" id="modal-description">
          {messageBody}
        </Typography>
+       {read === false && (<Button onClick={e => {
+         e.preventDefault();
+         markAsRead();
+       }}>Mark as Read</Button>)}
      </div>
    </Modal>
    </>

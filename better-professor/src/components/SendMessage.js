@@ -3,6 +3,9 @@ import { Link } from "react-router-dom";
 import { useStateValue } from "react-conflux";
 import axios from "axios";
 import { stateContext, SEND_MESSAGE_FAIL } from "../store";
+
+import { Editor } from '@tinymce/tinymce-react';
+
 import {
   Container,
   Button,
@@ -40,19 +43,29 @@ const SendMessage = props => {
       });
   };
 
+  function handleEditorChange(messageText) {
+    setMessageText({ messageText })
+  }
+
   return (
     <div style={{ marginTop: "6rem" }}>
+      
       <form
-        onSubmit={e => {
-          e.preventDefault();
-          const body = {
-            title: titleText,
-            text: messageText,
-            senderUserId: `${localStorage.getItem("userId")}`,
-            receiverUserId: receiverUserId
-          };
-          sendMessage(body);
-        }}
+      onSubmit={e => {
+        e.preventDefault();
+        console.log("e:", e);
+        console.log("message text:", messageText)
+      }}
+        // onSubmit={e => {
+        //   e.preventDefault();
+        //   const body = {
+        //     title: titleText,
+        //     text: messageText,
+        //     senderUserId: `${localStorage.getItem("userId")}`,
+        //     receiverUserId: receiverUserId
+        //   };
+        //   sendMessage(body);
+        // }}
       >
         <div style={{ display: "flex" }}>
           <div
@@ -83,8 +96,13 @@ const SendMessage = props => {
             }}
           />
         </div>
+        <Editor 
+      apiKey="seoqyye0f5vweemq7gcxskx8x7zmkspyyeszg1l46c7bzxiv"
+      value={messageText}
+      onEditorChange={handleEditorChange}
+      />
 
-        <TextField
+        {/* <TextField
           value={messageText}
           onChange={e => {
             setMessageText(e.target.value);
@@ -94,7 +112,7 @@ const SendMessage = props => {
           multiline
           fullWidth
           margin="normal"
-        />
+        /> */}
         <Button variant="contained" color="primary" type="submit">
           Send Message
         </Button>
