@@ -4,7 +4,20 @@ import moment from "moment";
 import MUIDataTable from "mui-datatables";
 import RadioButtonCheckedIcon from "@material-ui/icons/RadioButtonChecked";
 import RadioButtonUheckedIcon from "@material-ui/icons/RadioButtonUnchecked";
-import { LinearProgress, Button, FormGroup, Switch } from "@material-ui/core";
+import { LinearProgress, Button, FormGroup, Switch, Modal, Typography, makeStyles, Theme, createStyles } from "@material-ui/core";
+
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    paper: {
+      position: "absolute",
+      width: 400,
+      backgroundColor: theme.palette.background.paper,
+      boxShadow: theme.shadows[5],
+      padding: theme.spacing(4),
+      outline: "none"
+    }
+  })
+);
 
 const Fun = props => {
   const receivedColumns = [
@@ -49,6 +62,13 @@ const Fun = props => {
         filter: false,
         download: false
       }
+    },
+    {
+      name: "text",
+      label: "Text",
+      options: {
+        display: false
+      }
     }
   ];
 
@@ -91,6 +111,11 @@ const Fun = props => {
   const [loaded, setLoaded] = useState(false);
   const [sentMessageData, setSentMessageData] = useState([]);
   const [receivedMessageData, setReceivedMessageData] = useState([]);
+  const [messageBody, setMessageBody] = useState("");
+
+  const [open, setOpen] = useState(false);
+
+  const classes = useStyles();
 
   useEffect(() => {
     sentView === false ? getReceivedMessages() : getSentMessages();
@@ -136,6 +161,20 @@ const Fun = props => {
     });
   };
 
+  const messageText = messages => {
+    return messages.map(message => {
+      return message.text;
+    });
+  };
+
+  const handleOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
   const getReceivedMessages = () => {
     axios
       .get("https://better-professor.herokuapp.com/messages/received", {
@@ -156,6 +195,7 @@ const Fun = props => {
         const titles = title(data);
         const senderNames = senderName(data);
         const messageIds = messageId(data);
+        const messageTexts = messageText(data);
         const receivedData = [];
         for (let i = 0; i < timesRead.length; i++) {
           receivedData.push([
@@ -163,7 +203,8 @@ const Fun = props => {
             timesSent[i],
             senderNames[i],
             titles[i],
-            messageIds[i]
+            messageIds[i],
+            messageTexts[i]
           ]);
         }
         setReceivedMessageData(receivedData);
@@ -246,15 +287,21 @@ const Fun = props => {
         .catch(console.error);
       console.log("DELETING: --- ", row);
     },
-    onRowClick: function() {
-      console.log("im clickingggggg");
+    onRowClick: row => {
+      handleOpen();
+      setMessageBody(row[5]);
+      console.log(row[5])
     }
+    // function() {
+    //   console.log("im clickingggggg");
+    // }
   };
 
 
   return (
     <div style={{ marginTop: "6rem" }}>
       {loaded === false ? (<><h1>Loading...</h1><LinearProgress/></>) : 
+     <>
      <MUIDataTable
      title={(<FormGroup row="true">
      <p>Inbox</p>
@@ -277,6 +324,20 @@ const Fun = props => {
      columns={sentView === false ? receivedColumns : sentColumns}
      options={options}
    />
+   <Modal
+   aria-labelledby="modal-title"
+   aria-describedby="modal-description"
+   open={open}
+   onClose={handleClose}
+   >
+     <div style={{top: "50%", left: "50%", transform: "translate(-50%, -50%)"}} className={classes.paper}>
+       <Typography variant="h6" id="modal-title">Message Body:</Typography>
+       <Typography variant="subtitle1" id="modal-description">
+         {messageBody}
+       </Typography>
+     </div>
+   </Modal>
+   </>
     }
      
     </div>
