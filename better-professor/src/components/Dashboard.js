@@ -136,9 +136,9 @@ const Dashboard = props => {
     props.history.push("/my-bp/dash");
   }
 
-  function funClick() {
+  function messagesClick() {
     handleMenuClose();
-    props.history.push("/my-bp/fun");
+    props.history.push("/my-bp/messages");
   }
 
   return (
@@ -187,7 +187,7 @@ const Dashboard = props => {
             open={openMenu}
             onClose={handleMenuClose}
           >
-            <MenuItem onClick={funClick}>Fun</MenuItem>
+            <MenuItem onClick={messagesClick}>Messages</MenuItem>
             <MenuItem onClick={dashClick}>Upcoming Deadlines</MenuItem>
 
             {localStorage.getItem("userType") === "mentor" && (

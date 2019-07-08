@@ -5,6 +5,7 @@ import MUIDataTable from "mui-datatables";
 import RadioButtonCheckedIcon from "@material-ui/icons/RadioButtonChecked";
 import RadioButtonUncheckedIcon from "@material-ui/icons/RadioButtonUnchecked";
 import { LinearProgress, Button, FormGroup, Switch, Modal, Typography, makeStyles, Theme, createStyles } from "@material-ui/core";
+import { Editor } from '@tinymce/tinymce-react';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -19,7 +20,7 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-const Fun = props => {
+const Messages = props => {
   const receivedColumns = [
     {
       name: "read",
@@ -374,9 +375,13 @@ const Fun = props => {
    >
      <div style={{top: "50%", left: "50%", transform: "translate(-50%, -50%)"}} className={classes.paper}>
        <Typography variant="h6" id="modal-title">Message Body:</Typography>
-       <Typography variant="subtitle1" id="modal-description">
+       <Editor
+       init={{ toolbar: false, menubar: false, elementpath: false, statusbar:false }}
+       value={messageBody}
+       disabled />
+       {/* <Typography variant="subtitle1" id="modal-description">
          {messageBody}
-       </Typography>
+       </Typography> */}
        {read === false && (<Button onClick={e => {
          e.preventDefault();
          markAsRead();
@@ -390,4 +395,4 @@ const Fun = props => {
   );
 };
 
-export default Fun;
+export default Messages;

@@ -20,7 +20,7 @@ import MyStudents from "./components/MyStudents";
 import Account from "./components/Account";
 import Dash from "./components/Dash";
 
-import Fun from "./components/Fun";
+import Messages from "./components/Messages";
 
 const App = () => {
   return (
@@ -103,9 +103,9 @@ const App = () => {
         }}
       />
       <Route
-        path="/my-bp/fun"
+        path="/my-bp/messages"
         render={props => {
-          return <Fun {...props} />;
+          return <Messages {...props} />;
         }}
       />
     </StateProvider>

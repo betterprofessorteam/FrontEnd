@@ -22,8 +22,9 @@ const SendMessage = props => {
   const [state, dispatch] = useStateValue(stateContext);
 
   const [titleText, setTitleText] = useState("");
-  const [messageText, setMessageText] = useState("");
+  const [messageText, setMessageText] = useState({});
   const [receiverUserId, setReceiverUserId] = useState("");
+  const [loaded, setLoaded] = useState(false);
 
   const sendMessage = body => {
     axios
@@ -34,38 +35,43 @@ const SendMessage = props => {
       })
       .then(res => {
         console.log("RES.DATA", res.data);
-        props.history.push("/my-bp/inbox");
+        props.history.push("/my-bp/messages");
       })
       .catch(err => {
-        console.log(err.response);
+        console.log(err.response.data);
         dispatch({ type: SEND_MESSAGE_FAIL, payload: err.response });
-        alert("Sorry, something seems to have went wrong. Please try again.");
+        // alert("Sorry, something seems to have went wrong. Please try again.");
       });
   };
 
-  function handleEditorChange(messageText) {
-    setMessageText({ messageText })
+  function handleEditorChange(content) {
+    setLoaded(false);
+    setMessageText({ content })
   }
 
   return (
     <div style={{ marginTop: "6rem" }}>
       
       <form
-      onSubmit={e => {
-        e.preventDefault();
-        console.log("e:", e);
-        console.log("message text:", messageText)
-      }}
-        // onSubmit={e => {
-        //   e.preventDefault();
-        //   const body = {
-        //     title: titleText,
-        //     text: messageText,
-        //     senderUserId: `${localStorage.getItem("userId")}`,
-        //     receiverUserId: receiverUserId
-        //   };
-        //   sendMessage(body);
-        // }}
+      // onSubmit={e => {
+      //   e.preventDefault();
+      //   setLoaded(false);
+      //   console.log("e:", e);
+      //   console.log("message text:", messageText);
+      //   setLoaded(true);
+      // }}
+        onSubmit={e => {
+          e.preventDefault();
+          const body = {
+            title: titleText,
+            text: messageText.content,
+            senderUserId: `${localStorage.getItem("userId")}`,
+            receiverUserId: receiverUserId
+          };
+          console.log("BODY:", body);
+          console.log("MESSAGE TEXT:", messageText)
+          sendMessage(body);
+        }}
       >
         <div style={{ display: "flex" }}>
           <div
@@ -98,8 +104,9 @@ const SendMessage = props => {
         </div>
         <Editor 
       apiKey="seoqyye0f5vweemq7gcxskx8x7zmkspyyeszg1l46c7bzxiv"
-      value={messageText}
+      value={{messageText}}
       onEditorChange={handleEditorChange}
+      init={{ entity_encoding : "raw", elementpath: false, height: 300, statusbar: false }}
       />
 
         {/* <TextField
@@ -117,6 +124,11 @@ const SendMessage = props => {
           Send Message
         </Button>
       </form>
+      
+      {/* <Editor 
+      init={{ toolbar: false, menubar: false, elementpath: false, statusbar:false }}
+      value={loaded && messageText.content}
+      disabled /> */}
     </div>
   );
 };
