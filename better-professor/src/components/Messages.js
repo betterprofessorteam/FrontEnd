@@ -70,6 +70,13 @@ const Messages = props => {
       options: {
         display: false
       }
+    },
+    {
+      name: "read",
+      label: "Read",
+      options: {
+        display: false
+      }
     }
   ];
 
@@ -121,7 +128,14 @@ const Messages = props => {
       options: {
         display: false
       }
-    }
+    },
+    {
+      name: "read",
+      label: "Read",
+      options: {
+        display: false
+      }
+    } 
   ];
 
   const [sentView, setSentView] = useState(false);
@@ -143,10 +157,8 @@ const Messages = props => {
   const timeRead = messages => {
     return messages.map(message => {
       if(message.timeRead === 0) {
-        setRead(false);
         return (<RadioButtonUncheckedIcon />)
       } else {
-        setRead(true);
         return (<RadioButtonCheckedIcon />)
       }
     });
@@ -232,6 +244,9 @@ const Messages = props => {
       .then(res => {
         const data = res.data.content.sort((a, b) => b.timeSent > a.timeSent ? 1 : b.timeSent === a.timeSent ? 1 : -1)
 
+        const read = data.map(message => {
+          return message.timeRead
+        });
         const timesRead = timeRead(data);
         const timesSent = timeSent(data).map(date => {
           return moment(date).format("MMMM Do YYYY h:mm a");
@@ -248,10 +263,12 @@ const Messages = props => {
             senderNames[i],
             titles[i],
             messageIds[i],
-            messageTexts[i]
+            messageTexts[i],
+            read[i]
           ]);
         }
         setReceivedMessageData(receivedData);
+        console.log("DATA:", data)
         setLoaded(true);
       })
       .catch(err => {
@@ -272,7 +289,9 @@ const Messages = props => {
       })
       .then(res => {
         const data = res.data.content.sort((a, b) => b.timeSent > a.timeSent ? 1 : b.timeSent === a.timeSent ? 1 : -1)
-
+        const read = data.map(message => {
+          return message.timeRead
+        });
         const timesRead = timeRead(data);
         const timesSent = timeSent(data).map(date => {
           return moment(date).format("MMMM Do YYYY");
@@ -289,10 +308,12 @@ const Messages = props => {
             receiverNames[i],
             titles[i],
             messageIds[i],
-            messageTexts[i]
+            messageTexts[i],
+            read[i]
           ]);
         }
         setSentMessageData(sentData);
+      
         setLoaded(true);
       })
       .catch(err => {
@@ -337,6 +358,8 @@ const Messages = props => {
       handleOpen();
       setMessageBody(row[5]);
       setId(row[4]);
+      row[6] === 0 ? setRead(false) : setRead(true);
+      console.log(row)
     }
   };
 
@@ -376,16 +399,14 @@ const Messages = props => {
      <div style={{top: "50%", left: "50%", transform: "translate(-50%, -50%)"}} className={classes.paper}>
        <Typography variant="h6" id="modal-title">Message Body:</Typography>
        <Editor
+       apiKey="seoqyye0f5vweemq7gcxskx8x7zmkspyyeszg1l46c7bzxiv"
        init={{ toolbar: false, menubar: false, elementpath: false, statusbar:false }}
        value={messageBody}
        disabled />
-       {/* <Typography variant="subtitle1" id="modal-description">
-         {messageBody}
-       </Typography> */}
-       {read === false && (<Button onClick={e => {
+       {sentView === false && read === false ? (<Button onClick={e => {
          e.preventDefault();
          markAsRead();
-       }}>Mark as Read</Button>)}
+       }}>Mark as Read</Button>) : ""}
      </div>
    </Modal>
    </>

@@ -7,15 +7,11 @@ import { stateContext, SEND_MESSAGE_FAIL } from "../store";
 import { Editor } from '@tinymce/tinymce-react';
 
 import {
-  Container,
   Button,
   TextField,
   InputLabel,
   Select,
-  FormGroup,
-  Input,
   MenuItem,
-  FormControl
 } from "@material-ui/core";
 
 const SendMessage = props => {
@@ -53,13 +49,6 @@ const SendMessage = props => {
     <div style={{ marginTop: "6rem" }}>
       
       <form
-      // onSubmit={e => {
-      //   e.preventDefault();
-      //   setLoaded(false);
-      //   console.log("e:", e);
-      //   console.log("message text:", messageText);
-      //   setLoaded(true);
-      // }}
         onSubmit={e => {
           e.preventDefault();
           const body = {
@@ -108,33 +97,12 @@ const SendMessage = props => {
       onEditorChange={handleEditorChange}
       init={{ entity_encoding : "raw", elementpath: false, height: 300, statusbar: false }}
       />
-
-        {/* <TextField
-          value={messageText}
-          onChange={e => {
-            setMessageText(e.target.value);
-          }}
-          label="Message Body"
-          variant="outlined"
-          multiline
-          fullWidth
-          margin="normal"
-        /> */}
         <Button variant="contained" color="primary" type="submit">
           Send Message
         </Button>
       </form>
-      
-      {/* <Editor 
-      init={{ toolbar: false, menubar: false, elementpath: false, statusbar:false }}
-      value={loaded && messageText.content}
-      disabled /> */}
     </div>
   );
 };
-
-//Include a search field for list of students/mentors
-//Large text-field for message text
-//send functionality w/ POST request
 
 export default SendMessage;

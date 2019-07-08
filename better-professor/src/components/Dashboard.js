@@ -126,10 +126,10 @@ const Dashboard = props => {
     props.history.push("/my-bp/send-message");
   }
 
-  function inboxClick() {
-    handleMenuClose();
-    props.history.push("/my-bp/inbox");
-  }
+  // function inboxClick() {
+  //   handleMenuClose();
+  //   props.history.push("/my-bp/inbox");
+  // }
 
   function dashClick() {
     handleMenuClose();
@@ -187,8 +187,9 @@ const Dashboard = props => {
             open={openMenu}
             onClose={handleMenuClose}
           >
-            <MenuItem onClick={messagesClick}>Messages</MenuItem>
             <MenuItem onClick={dashClick}>Upcoming Deadlines</MenuItem>
+            <MenuItem onClick={messagesClick}>Messages</MenuItem>
+            <MenuItem onClick={sendMessageClick}>Send Message</MenuItem>
 
             {localStorage.getItem("userType") === "mentor" && (
               <div>
@@ -199,8 +200,8 @@ const Dashboard = props => {
               </div>
             )}
             <MenuItem onClick={myCalendarClick}>My Calendar</MenuItem>
-            <MenuItem onClick={inboxClick}>Inbox</MenuItem>
-            <MenuItem onClick={sendMessageClick}>Send Message</MenuItem>
+            {/* <MenuItem onClick={inboxClick}>Inbox</MenuItem> */}
+            
           </Menu>
           <Typography variant="h6">Menu</Typography>
           <div style={{ marginLeft: "3rem", marginRight: "7rem" }}>
