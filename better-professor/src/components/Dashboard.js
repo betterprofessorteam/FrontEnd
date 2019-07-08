@@ -27,74 +27,12 @@ import {
   Typography
 } from "@material-ui/core";
 
-// const StyledMenu = withStyles({
-//   paper: {
-//     border: "1px solid #d3d4d5"
-//   }
-// })(props => (
-//   <Menu
-//     elevation={0}
-//     getContentAnchorEl={null}
-//     anchorOrigin={{
-//       vertical: "bottom",
-//       horizontal: "center"
-//     }}
-//     transformOrigin={{
-//       vertical: "top",
-//       horizontal: "center"
-//     }}
-//     {...props}
-//   />
-// ));
-
-// const StyledMenuItem = withStyles(theme => ({
-//   root: {
-//     "&:focus": {
-//       backgroundColor: theme.palette.primary.main,
-//       "& .MuiListItemIcon-root, & .MuiListItemText-primary": {
-//         color: theme.palette.common.white
-//       }
-//     }
-//   }
-// }))(MenuItem);
-
-// const useStyles = makeStyles({
-//   list: {
-//     width: 250
-//   },
-//   fullList: {
-//     width: "auto"
-//   }
-// });
-
 const Dashboard = props => {
   const [state, dispatch] = useStateValue(stateContext);
-
-  // const classes = useStyles();
 
   const [open, setOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
   const openMenu = Boolean(anchorEl);
-
-  // const getUserId = () => {
-  //   axios
-  //     .get("https://better-professor.herokuapp.com/user", {
-  //       headers: {
-  //         Authorization: `Bearer ${localStorage.getItem("token")}`
-  //       }
-  //     })
-  //     .then(res => {
-  //       console.log(res.data);
-  //       localStorage.setItem("userId", res.data.userId);
-
-  //     })
-  //     .catch(err => {
-  //       console.log(err.response);
-  //       alert(
-  //         "Sorry, something seems to have went wrong. Please try logging in again."
-  //       );
-  //     });
-  // };
 
   const getStudents = () => {
     axios
@@ -144,7 +82,6 @@ const Dashboard = props => {
   };
 
   useEffect(() => {
-    // setUserType();
     getUserInfo();
   }, []);
 
@@ -189,14 +126,19 @@ const Dashboard = props => {
     props.history.push("/my-bp/send-message");
   }
 
-  function inboxClick() {
-    handleMenuClose();
-    props.history.push("/my-bp/inbox");
-  }
+  // function inboxClick() {
+  //   handleMenuClose();
+  //   props.history.push("/my-bp/inbox");
+  // }
 
   function dashClick() {
     handleMenuClose();
     props.history.push("/my-bp/dash");
+  }
+
+  function messagesClick() {
+    handleMenuClose();
+    props.history.push("/my-bp/messages");
   }
 
   return (
@@ -246,6 +188,8 @@ const Dashboard = props => {
             onClose={handleMenuClose}
           >
             <MenuItem onClick={dashClick}>Upcoming Deadlines</MenuItem>
+            <MenuItem onClick={messagesClick}>Messages</MenuItem>
+            <MenuItem onClick={sendMessageClick}>Send Message</MenuItem>
 
             {localStorage.getItem("userType") === "mentor" && (
               <div>
@@ -256,8 +200,8 @@ const Dashboard = props => {
               </div>
             )}
             <MenuItem onClick={myCalendarClick}>My Calendar</MenuItem>
-            <MenuItem onClick={inboxClick}>Inbox</MenuItem>
-            <MenuItem onClick={sendMessageClick}>Send Message</MenuItem>
+            {/* <MenuItem onClick={inboxClick}>Inbox</MenuItem> */}
+            
           </Menu>
           <Typography variant="h6">Menu</Typography>
           <div style={{ marginLeft: "3rem", marginRight: "7rem" }}>

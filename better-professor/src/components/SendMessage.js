@@ -3,24 +3,24 @@ import { Link } from "react-router-dom";
 import { useStateValue } from "react-conflux";
 import axios from "axios";
 import { stateContext, SEND_MESSAGE_FAIL } from "../store";
+
+import { Editor } from '@tinymce/tinymce-react';
+
 import {
-  Container,
   Button,
   TextField,
   InputLabel,
   Select,
-  FormGroup,
-  Input,
   MenuItem,
-  FormControl
 } from "@material-ui/core";
 
 const SendMessage = props => {
   const [state, dispatch] = useStateValue(stateContext);
 
   const [titleText, setTitleText] = useState("");
-  const [messageText, setMessageText] = useState("");
+  const [messageText, setMessageText] = useState({});
   const [receiverUserId, setReceiverUserId] = useState("");
+  const [loaded, setLoaded] = useState(false);
 
   const sendMessage = body => {
     axios
@@ -31,26 +31,34 @@ const SendMessage = props => {
       })
       .then(res => {
         console.log("RES.DATA", res.data);
-        props.history.push("/my-bp/inbox");
+        props.history.push("/my-bp/messages");
       })
       .catch(err => {
-        console.log(err.response);
+        console.log(err.response.data);
         dispatch({ type: SEND_MESSAGE_FAIL, payload: err.response });
-        alert("Sorry, something seems to have went wrong. Please try again.");
+        // alert("Sorry, something seems to have went wrong. Please try again.");
       });
   };
 
+  function handleEditorChange(content) {
+    setLoaded(false);
+    setMessageText({ content })
+  }
+
   return (
     <div style={{ marginTop: "6rem" }}>
+      
       <form
         onSubmit={e => {
           e.preventDefault();
           const body = {
             title: titleText,
-            text: messageText,
+            text: messageText.content,
             senderUserId: `${localStorage.getItem("userId")}`,
             receiverUserId: receiverUserId
           };
+          console.log("BODY:", body);
+          console.log("MESSAGE TEXT:", messageText)
           sendMessage(body);
         }}
       >
@@ -83,18 +91,12 @@ const SendMessage = props => {
             }}
           />
         </div>
-
-        <TextField
-          value={messageText}
-          onChange={e => {
-            setMessageText(e.target.value);
-          }}
-          label="Message Body"
-          variant="outlined"
-          multiline
-          fullWidth
-          margin="normal"
-        />
+        <Editor 
+      apiKey="seoqyye0f5vweemq7gcxskx8x7zmkspyyeszg1l46c7bzxiv"
+      value={{messageText}}
+      onEditorChange={handleEditorChange}
+      init={{ entity_encoding : "raw", elementpath: false, height: 300, statusbar: false }}
+      />
         <Button variant="contained" color="primary" type="submit">
           Send Message
         </Button>
@@ -102,9 +104,5 @@ const SendMessage = props => {
     </div>
   );
 };
-
-//Include a search field for list of students/mentors
-//Large text-field for message text
-//send functionality w/ POST request
 
 export default SendMessage;
