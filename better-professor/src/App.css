@@ -20,7 +20,6 @@ a,
 form,
 div {
   font-family: "Roboto", sans-serif;
-  font-size: 0.85rem;
 }
 
 .loading-messages {
@@ -43,4 +42,8 @@ div {
 
 .react-calendar__tile {
   height: 3.2rem;
+}
+
+.MuiTableRow-root.MuiTableRow-hover:hover {
+  cursor: pointer !important;
 }
