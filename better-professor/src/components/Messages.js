@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import moment from "moment";
+import { sentColumns, receivedColumns, timeRead, timeSent, title, receiverName, senderName, messageId, messageText, options } from './MessagesConstants';
 import MUIDataTable from "mui-datatables";
-import RadioButtonCheckedIcon from "@material-ui/icons/RadioButtonChecked";
-import RadioButtonUncheckedIcon from "@material-ui/icons/RadioButtonUnchecked";
 import { LinearProgress, Button, FormGroup, Switch, Modal, Typography, makeStyles, Theme, createStyles } from "@material-ui/core";
 import { Editor } from '@tinymce/tinymce-react';
 
@@ -21,122 +20,6 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 const Messages = props => {
-  const receivedColumns = [
-    {
-      name: "read",
-      label: "Read",
-      options: {
-        filter: false,
-        sort: false,
-        download: false
-      }
-    },
-    {
-      name: "date",
-      label: "Date",
-      options: {
-        filter: true,
-        sort: false
-      }
-    },
-    {
-      name: "from",
-      label: "From",
-      options: {
-        filter: true,
-        sort: true
-      }
-    },
-    {
-      name: "title",
-      label: "Title",
-      options: {
-        filter: true,
-        sort: true
-      }
-    },
-    {
-      name: "id",
-      label: "ID",
-      options: {
-        display: false,
-        filter: false,
-        download: false
-      }
-    },
-    {
-      name: "text",
-      label: "Text",
-      options: {
-        display: false
-      }
-    },
-    {
-      name: "read",
-      label: "Read",
-      options: {
-        display: false
-      }
-    }
-  ];
-
-  const sentColumns = [
-    {
-      name: "read",
-      label: "Read",
-      options: {
-        filter: false,
-        sort: false
-      }
-    },
-    {
-      name: "date",
-      label: "Date",
-      options: {
-        filter: true,
-        sort: false
-      }
-    },
-    {
-      name: "to",
-      label: "To",
-      options: {
-        filter: true,
-        sort: true
-      }
-    },
-    {
-      name: "title",
-      label: "Title",
-      options: {
-        filter: true,
-        sort: true
-      }
-    },
-    {
-      name: "id",
-      label: "ID",
-      options: {
-        display: false,
-        filter: false,
-        download: false
-      }
-    },
-    {
-      name: "text",
-      label: "Text",
-      options: {
-        display: false
-      }
-    },
-    {
-      name: "read",
-      label: "Read",
-      options: {
-        display: false
-      }
-    } 
-  ];
 
   const [sentView, setSentView] = useState(false);
   const [loaded, setLoaded] = useState(false);
@@ -153,52 +36,6 @@ const Messages = props => {
   useEffect(() => {
     sentView === false ? getReceivedMessages() : getSentMessages();
   }, [sentView]);
-
-  const timeRead = messages => {
-    return messages.map(message => {
-      if(message.timeRead === 0) {
-        return (<RadioButtonUncheckedIcon />)
-      } else {
-        return (<RadioButtonCheckedIcon />)
-      }
-    });
-  };
-
-  const timeSent = messages => {
-    return messages.map(message => {
-      return message.timeSent;
-    });
-  };
-
-  const title = messages => {
-    return messages.map(message => {
-      return message.title;
-    });
-  };
-
-  const receiverName = messages => {
-    return messages.map(message => {
-      return `${message.receiverLastName}, ${message.receiverFirstName}`;
-    });
-  };
-
-  const senderName = messages => {
-    return messages.map(message => {
-      return `${message.senderLastName}, ${message.senderFirstName}`;
-    });
-  };
-
-  const messageId = messages => {
-    return messages.map(message => {
-      return message.messageId;
-    });
-  };
-
-  const messageText = messages => {
-    return messages.map(message => {
-      return message.text;
-    });
-  };
 
   const handleOpen = () => {
     setOpen(true);
@@ -362,7 +199,6 @@ const Messages = props => {
       console.log(row)
     }
   };
-
 
   return (
     <div style={{ marginTop: "6rem" }}>

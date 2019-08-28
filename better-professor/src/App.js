@@ -12,7 +12,7 @@ import Home from "./components/Home";
 import MyCalendar from "./components/MyCalendar";
 import Dashboard from "./components/Dashboard";
 import Students from "./components/Students";
-import Inbox from "./components/Inbox";
+// import Inbox from "./not using/Inbox";
 import SendMessage from "./components/SendMessage";
 import RegisterSuccess from "./components/RegisterSuccess";
 import StudentProfile from "./components/StudentProfile";
@@ -66,12 +66,12 @@ const App = () => {
           return <MyCalendar {...props} />;
         }}
       />
-      <Route
+      {/* <Route
         path="/my-bp/inbox"
         render={props => {
           return <Inbox {...props} />;
         }}
-      />
+      /> */}
       <Route
         path="/my-bp/send-message"
         render={props => {
